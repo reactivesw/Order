@@ -7,8 +7,6 @@ import io.reactivesw.order.application.model.PaymentView;
 import io.reactivesw.order.infrastructure.validator.CartValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,9 +28,7 @@ public class OrderRestClient {
   /**
    * RestTemplate.
    */
-  @Autowired
-  @Qualifier("restTemplate")
-  private transient RestTemplate restTemplate;
+  private transient RestTemplate restTemplate = new RestTemplate();
 
   /**
    * Gets cart.
