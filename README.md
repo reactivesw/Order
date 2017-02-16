@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/reactivesw/order.svg?branch=master)](https://travis-ci.org/reactivesw/order)
 # 1, Name
 order service
 
