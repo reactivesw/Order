@@ -4,8 +4,7 @@ import io.reactivesw.order.application.model.OrderFromCartDraft;
 import io.reactivesw.order.application.model.OrderView;
 import io.reactivesw.order.domain.service.OrderService;
 import io.reactivesw.order.infrastructure.Router;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +41,8 @@ public class OrderController {
    * @param draft OrderFromCartDraft
    * @return Order order
    */
-  @ApiOperation("Create Order from Cart")
   @PostMapping(Router.ORDER_ROOT)
-  public OrderView createOrderFromCart(@RequestBody
-                                       @ApiParam(value = "order from cart draft", required = true)
-                                       @Valid OrderFromCartDraft draft) {
+  public OrderView createOrderFromCart(@RequestBody @Valid OrderFromCartDraft draft) {
     LOG.debug("enter createOrderFromCart, draft is : {}", draft.toString());
 
     OrderView result = orderService.createOrderFromCart(draft);
@@ -63,11 +59,8 @@ public class OrderController {
    * @param orderId the order id
    * @return the order by id
    */
-  @ApiOperation("get order by id")
   @GetMapping(Router.ORDER_WITH_ID)
-  public OrderView getOrderById(@PathVariable(Router.ORDER_ID)
-                                @ApiParam(value = "order id", required = true)
-                                    String orderId) {
+  public OrderView getOrderById(@PathVariable(Router.ORDER_ID) String orderId) {
     LOG.debug("enter getOrderById, order id is : {}", orderId);
 
     OrderView result = orderService.getOrderById(orderId);
@@ -83,14 +76,9 @@ public class OrderController {
    * @param orderId the order id
    * @param version the order version
    */
-  @ApiOperation("delete order")
   @DeleteMapping(Router.ORDER_WITH_ID)
-  public void deleteOrder(@PathVariable(Router.ORDER_ID)
-                          @ApiParam(value = "order id", required = true)
-                              String orderId,
-                          @RequestParam
-                          @ApiParam(value = "order version", required = true)
-                              Integer version) {
+  public void deleteOrder(@PathVariable(Router.ORDER_ID) String orderId,
+                          @RequestParam Integer version) {
     LOG.debug("enter deleteOrder, order id is : {}", orderId);
 
     orderService.deleteOrder(orderId, version);

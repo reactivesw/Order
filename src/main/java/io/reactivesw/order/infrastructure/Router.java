@@ -8,7 +8,7 @@ public final class Router {
   /**
    * root url of order.
    */
-  public static final String ORDER_ROOT = "/orders";
+  public static final String ORDER_ROOT = "/";
 
   /**
    * order id.
@@ -23,5 +23,10 @@ public final class Router {
   /**
    * get order by id.
    */
-  public static final String ORDER_WITH_ID = ORDER_ROOT + "/" + ID_PATTERN;
+  public static final String ORDER_WITH_ID = ORDER_ROOT + ID_PATTERN;
+
+  /**
+   * The constant order_health_check.
+   */
+  public static final String ORDER_HEALTH_CHECK = ORDER_ROOT + "health";
 }

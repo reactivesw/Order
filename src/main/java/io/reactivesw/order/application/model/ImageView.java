@@ -1,15 +1,15 @@
 package io.reactivesw.order.application.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.reactivesw.order.domain.model.value.AssetDimensionsView;
-import io.swagger.annotations.ApiModel;
+
 import lombok.Data;
 
 /**
  * Created by umasuo on 16/11/17.
  */
 @Data
-@ApiModel
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ImageView {
   /**

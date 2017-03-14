@@ -13,12 +13,14 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -33,6 +35,7 @@ import javax.persistence.Version;
 @Table(name = "order_order")
 @Data
 @EqualsAndHashCode(callSuper = false)
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
 
