@@ -2,6 +2,7 @@ package io.reactivesw.order.application.controller;
 
 import io.reactivesw.order.application.model.OrderFromCartDraft;
 import io.reactivesw.order.application.model.OrderView;
+import io.reactivesw.order.application.service.OrderApplication;
 import io.reactivesw.order.domain.service.OrderService;
 import io.reactivesw.order.infrastructure.Router;
 
@@ -36,6 +37,12 @@ public class OrderController {
   private transient OrderService orderService;
 
   /**
+   * The Order application.
+   */
+  @Autowired
+  private transient OrderApplication orderApplication;
+
+  /**
    * create order from cart.
    *
    * @param draft OrderFromCartDraft
@@ -45,7 +52,7 @@ public class OrderController {
   public OrderView createOrderFromCart(@RequestBody @Valid OrderFromCartDraft draft) {
     LOG.debug("enter createOrderFromCart, draft is : {}", draft.toString());
 
-    OrderView result = orderService.createOrderFromCart(draft);
+    OrderView result = orderApplication.createOrderFromCart(draft);
 
     LOG.debug("end createOrderFromCart, result is : {}", result.toString());
 

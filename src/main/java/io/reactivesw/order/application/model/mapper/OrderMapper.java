@@ -53,7 +53,7 @@ public final class OrderMapper {
    * @param entity the entity
    * @return the order
    */
-  public static OrderView entityToModel(Order entity) {
+  public static OrderView mapToModel(Order entity) {
     OrderView model = new OrderView();
 
     model.setId(entity.getId());

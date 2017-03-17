@@ -4,3 +4,13 @@ spring:
   cloud:
     config:
       uri: http://localhost:8888/
+
+cart:
+  service:
+    uri: http://localhost:8081/
+payment:
+  service:
+    uri: http://localhost:8087/
+inventory:
+  service:
+    uri: http://localhost:8085/

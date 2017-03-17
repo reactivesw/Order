@@ -28,5 +28,5 @@ public class OrderFromCartDraft {
 
   @NotNull
   @Size(min = 1)
-  private String paymentMethodToken;
+  private String creditCardId;
 }

@@ -7,6 +7,7 @@ import io.reactivesw.order.application.model.PaymentView;
 import io.reactivesw.order.infrastructure.validator.CartValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,6 +26,15 @@ public class OrderRestClient {
    */
   private static final Logger LOG = LoggerFactory.getLogger(OrderRestClient.class);
 
+  @Value("${cart.service.uri}")
+  String cartUri;
+
+  @Value("${payment.service.uri")
+  String paymentUri;
+
+  @Value(("${inventory.service.uri}"))
+  String inventoryUri;
+
   /**
    * RestTemplate.
    */
@@ -40,7 +50,7 @@ public class OrderRestClient {
   public CartView getCart(String cartId, Integer version) {
     LOG.debug("enter getCart, cart id is : {}, cart version is : {}", cartId, version);
 
-    String url = "http://localhost:8088/carts/" + cartId;
+    String url = cartUri + cartId;
     CartView result = restTemplate.getForObject(url, CartView.class);
 
     CartValidator.validateVersion(result, version);
@@ -61,13 +71,12 @@ public class OrderRestClient {
     LOG.debug("enter checkout, centAmount is : {}, payment method token is : {}", centAmount,
         paymentMethodToken);
 
-    String url = "http://localhost:8088/payments";
     MultiValueMap<String, String> request = new LinkedMultiValueMap<String, String>();
     request.add("customerId", customerId);
     request.add("amount", String.valueOf(centAmount));
     request.add("token", paymentMethodToken);
 
-    PaymentView result = restTemplate.postForObject(url, request, PaymentView.class);
+    PaymentView result = restTemplate.postForObject(paymentUri, request, PaymentView.class);
     LOG.debug("end checkout, result is : {}", result);
     return result;
   }
@@ -82,10 +91,9 @@ public class OrderRestClient {
     LOG.debug("enter changeInventoryEntry");
 
     // TODO: 17/2/6
-    String url = "http://localhost:8088/inventory";
     MultiValueMap<String, List> request = new LinkedMultiValueMap<>();
     request.add("requests", inventoryRequestList);
-    restTemplate.put(url, request);
+    restTemplate.put(inventoryUri, request);
 
     InventoryEntryView result = null;
     LOG.debug("end changeInventoryEntry");

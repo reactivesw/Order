@@ -2,23 +2,16 @@ package io.reactivesw.order.domain.service;
 
 import io.reactivesw.exception.ConflictException;
 import io.reactivesw.exception.NotExistException;
-import io.reactivesw.model.Money;
 import io.reactivesw.order.application.model.CartView;
-import io.reactivesw.order.application.model.InventoryRequest;
-import io.reactivesw.order.application.model.OrderFromCartDraft;
 import io.reactivesw.order.application.model.OrderView;
-import io.reactivesw.order.application.model.PaymentView;
 import io.reactivesw.order.application.model.mapper.OrderMapper;
-import io.reactivesw.order.application.service.OrderRestClient;
 import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.infrastructure.repository.OrderRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Davis on 17/2/6.
@@ -31,64 +24,29 @@ public class OrderService {
   private static final Logger LOG = LoggerFactory.getLogger(OrderService.class);
 
   /**
-   * order rest client.
-   */
-  @Autowired
-  private transient OrderRestClient orderRestClient;
-
-  /**
    * order repository.
    */
   @Autowired
   private transient OrderRepository orderRepository;
 
+
   /**
-   * Create order from cart order.
+   * Save order order.
    *
-   * @param draft the draft
-   * @return the order
+   * @param paymentId the payment id
+   * @param cart      the cart
+   * @return the order view
    */
-  public OrderView createOrderFromCart(OrderFromCartDraft draft) {
-    /* TODO: 17/2/7
-    1. get cart
-    2. update inventory
-    3. checkout
-    4. change cart status
-     */
-    LOG.debug("enter createOrderFromCart, draft is : {}", draft.toString());
+  public OrderView saveOrder(String paymentId, CartView cart) {
+    LOG.debug("enter saveOrder, payment id is : {}, cart view is : {}", paymentId, cart);
 
-    CartView cart = orderRestClient.getCart(draft.getId(), draft.getVersion());
+    Order entity = OrderMapper.of(cart, paymentId);
 
-    orderRestClient.changeInventoryEntry(getInventoryRequest(cart));
-
-    Money amount = cart.getTotalPrice();
-
-    PaymentView payment = orderRestClient.checkout(cart.getCustomerId(), amount.getCentAmount(),
-        draft
-        .getPaymentMethodToken());
-
-    Order entity = OrderMapper.of(cart, payment.getId());
     Order savedEntity = orderRepository.save(entity);
 
-    OrderView result = OrderMapper.entityToModel(savedEntity);
+    OrderView result = OrderMapper.mapToModel(savedEntity);
 
     LOG.debug("end createOrderFromCart, result is : {}", result);
-    return result;
-  }
-
-  /**
-   * get inventory request by cart.
-   *
-   * @param cart Cart
-   * @return list of Inventory Request
-   */
-  private List<InventoryRequest> getInventoryRequest(CartView cart) {
-    List<InventoryRequest> result = cart.getLineItems().parallelStream().map(
-        lineItem -> {
-          return new InventoryRequest(
-              lineItem.getProductVariant().getSku(), lineItem.getQuantity());
-        }
-    ).collect(Collectors.toList());
 
     return result;
   }
@@ -103,7 +61,7 @@ public class OrderService {
     LOG.debug("enter getOrderById, order id is : {}", orderId);
 
     Order entity = getOrderEntity(orderId);
-    OrderView result = OrderMapper.entityToModel(entity);
+    OrderView result = OrderMapper.mapToModel(entity);
 
     LOG.debug("end getOrderById, result is : {}", result);
 
@@ -118,12 +76,16 @@ public class OrderService {
    */
   public Order getOrderEntity(String orderId) {
     LOG.debug("enter getOrderEntity, order is is : {}", orderId);
+
     Order result = orderRepository.findOne(orderId);
+
     if (result == null) {
       LOG.debug("can not find order by id : {}", orderId);
       throw new NotExistException("Order Not Exist");
     }
+
     LOG.debug("end getOrderEntity, result is : {}", result);
+
     return result;
   }
 
