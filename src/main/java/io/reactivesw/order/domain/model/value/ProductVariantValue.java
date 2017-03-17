@@ -1,15 +1,19 @@
 package io.reactivesw.order.domain.model.value;
 
-import io.reactivesw.order.infrastructure.util.ListJsonConverter;
+import io.reactivesw.database.dialect.JSONBUserType;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,6 +27,9 @@ import javax.persistence.Table;
 @Table(name = "product_variant")
 @Data
 @EqualsAndHashCode(callSuper = false)
+@TypeDef(name = "List", typeClass = JSONBUserType.class, parameters = {
+    @Parameter(name = JSONBUserType.CLASS, value = "java.util.List")}
+)
 public class ProductVariantValue {
 
   /**
@@ -73,8 +80,7 @@ public class ProductVariantValue {
   /**
    * list of asset ids.
    */
-  @Column(name = "asset_id", columnDefinition = "JSON")
-  @Convert(converter = ListJsonConverter.class)
+  @Type(type = "List")
   private List<String> assetIds;
 
 }

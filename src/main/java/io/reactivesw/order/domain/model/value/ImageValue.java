@@ -1,12 +1,16 @@
 package io.reactivesw.order.domain.model.value;
 
-import io.reactivesw.order.infrastructure.util.AssetDimensionsJsonConverter;
+import io.reactivesw.database.dialect.JSONBUserType;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,6 +23,10 @@ import javax.persistence.Table;
 @Table(name = "image")
 @Data
 @EqualsAndHashCode(callSuper = false)
+@TypeDef(name = "Dimensions", typeClass = JSONBUserType.class, parameters = {
+    @Parameter(name = JSONBUserType.CLASS,
+        value = "io.reactivesw.order.domain.model.value.AssetDimensionsView")}
+)
 public class ImageValue {
   /**
    * Id
@@ -38,8 +46,7 @@ public class ImageValue {
   /**
    * label.
    */
-  @Column(name = "dimensions", columnDefinition = "JSON")
-  @Convert(converter = AssetDimensionsJsonConverter.class)
+  @Type(type = "Dimensions")
   private AssetDimensionsView dimensions;
 
   /**
