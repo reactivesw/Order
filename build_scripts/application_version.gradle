@@ -1,0 +1,4 @@
+jar {
+    baseName = 'order'
+    version = '0.0.1'
+}
