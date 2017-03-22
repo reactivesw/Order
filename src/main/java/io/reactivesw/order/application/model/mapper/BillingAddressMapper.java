@@ -16,37 +16,33 @@ public final class BillingAddressMapper {
   /**
    * Model to entity billing address value.
    *
-   * @param model the model
+   * @param view the model
    * @return the billing address value
    */
-  public static BillingAddressValue modelToEntity(AddressView model) {
-    BillingAddressValue entity = new BillingAddressValue();
+  public static BillingAddressValue modelToEntity(AddressView view) {
+    BillingAddressValue address = new BillingAddressValue();
 
-    if (model != null) {
-      entity.setTitle(model.getTitle());
-      entity.setSalutation(model.getSalutation());
-      entity.setFirstName(model.getFirstName());
-      entity.setLastName(model.getLastName());
-      entity.setStreetName(model.getStreetName());
-      entity.setStreetNumber(model.getStreetNumber());
-      entity.setAdditionalStreetInfo(model.getAdditionalStreetInfo());
-      entity.setPostalCode(model.getPostalCode());
-      entity.setCity(model.getCity());
-      entity.setRegion(model.getRegion());
-      entity.setState(model.getState());
-      entity.setCountry(model.getCountry());
-      entity.setCompany(model.getCompany());
-      entity.setDepartment(model.getDepartment());
-      entity.setBuilding(model.getBuilding());
-      entity.setApartment(model.getApartment());
-      entity.setPhone(model.getPhone());
-      entity.setMobile(model.getMobile());
-      entity.setEmail(model.getEmail());
-      entity.setFax(model.getFax());
-      entity.setAdditionalAddressInfo(model.getAdditionalAddressInfo());
-      entity.setExternalId(model.getExternalId());
+    if (view != null) {
+      address.setId(view.getId());
+
+      address.setFullName(view.getFullName());
+
+      address.setPhone(view.getPhone());
+
+      address.setZip(view.getZip());
+
+      address.setFirstLine(view.getFirstLine());
+
+      address.setSecondLine(view.getSecondLine());
+
+      address.setCountry(view.getCountry());
+
+      address.setState(view.getState());
+
+      address.setCity(view.getCity());
+
     }
 
-    return entity;
+    return address;
   }
 }
