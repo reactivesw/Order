@@ -1,11 +1,8 @@
 package io.reactivesw.order.application.model.mapper;
 
 import io.reactivesw.order.application.model.AddressView;
-import io.reactivesw.order.domain.model.value.BillingAddressValue;
+import io.reactivesw.order.domain.model.value.BillingAddress;
 
-/**
- * Created by Davis on 17/2/6.
- */
 public final class BillingAddressMapper {
   /**
    * Instantiates a new Billing address mapper.
@@ -19,8 +16,8 @@ public final class BillingAddressMapper {
    * @param view the model
    * @return the billing address value
    */
-  public static BillingAddressValue modelToEntity(AddressView view) {
-    BillingAddressValue address = new BillingAddressValue();
+  public static BillingAddress modelToEntity(AddressView view) {
+    BillingAddress address = new BillingAddress();
 
     if (view != null) {
       address.setId(view.getId());

@@ -1,25 +1,29 @@
 package io.reactivesw.order.domain.model.value;
 
+import io.reactivesw.database.dialect.JSONBUserType;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * Created by umasuo on 16/11/17.
+ * Created by Davis on 16/11/23.
  */
 @Entity
-@Table(name = "shipping_rate")
+@Table(name = "image")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ShippingRateValue {
-
+public class Image {
   /**
    * Id
    */
@@ -30,14 +34,16 @@ public class ShippingRateValue {
   protected String id;
 
   /**
-   * price in money.
+   * image url.
    */
-  @OneToOne
-  private MoneyValue price;
+  @Column(name = "url")
+  private String url;
+
 
   /**
-   * free above in money.
+   * label.
    */
-  @OneToOne
-  private MoneyValue freeAbove;
+  @Column(name = "label")
+  private String label;
+
 }

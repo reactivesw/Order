@@ -1,12 +1,11 @@
 package io.reactivesw.order.domain.model.value;
 
-import io.reactivesw.order.infrastructure.enums.LineItemPriceMode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,8 +22,8 @@ import javax.persistence.Table;
 @Table(name = "line_item")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false, of = {"productId", "supplyChannel", "distributionChannel"})
-public class LineItemValue {
+@EqualsAndHashCode(callSuper = false)
+public class LineItem {
   /**
    * Id
    */
@@ -43,33 +42,31 @@ public class LineItemValue {
   /**
    * name in localized string.
    */
-  @OneToMany
-  private Set<LocalizedStringValue> name;
-
-  /**
-   * product slug in localized string.
-   */
   @Column
-  private String productSlug;
+  private LocalizedStringValue name;
 
   /**
-   * product variant.
-   * a snap shop for variant.
+   * id in number.
    */
-  @OneToOne
-  private ProductVariantValue variant;
+  @Column(nullable = false)
+  private Integer variantId;
+
+  /**
+   * sku.
+   */
+  @Column(nullable = false)
+  private String sku;
+  /**
+   * list of images.
+   */
+  @OneToMany
+  private List<Image> images;
 
   /**
    * price.
    */
   @OneToOne
-  private PriceValue price;
-
-  /**
-   * TaxedItemPriceValue.
-   */
-  @OneToOne
-  private TaxedItemPriceValue taxedPrice;
+  private Price price;
 
   /**
    * The total price of this line item. If the line item is discounted, then the totalPrice is
@@ -78,50 +75,12 @@ public class LineItemValue {
    * it depends on the taxRate.includedInPrice property.
    */
   @OneToOne
-  private MoneyValue totalPrice;
+  private Money totalPrice;
 
   /**
    * quantity.
    */
   @Column
   private Integer quantity;
-
-  /**
-   * list of item state.
-   */
-  @OneToMany
-  private Set<ItemStateValue> state;
-
-  /**
-   * tax rate.
-   */
-  @OneToOne
-  private TaxRateValue taxRate;
-
-  /**
-   * supplyChannel.
-   */
-  @Column(name = "supply_channel")
-  private String supplyChannel;
-
-  /**
-   * distributionChannel.
-   */
-  @Column(name = "distribution_channel")
-  private String distributionChannel;
-
-  /**
-   * DiscountedLineItemPriceForQuantity ids.
-   * TODO we will use this later.
-   */
-  @Column(name = "discounted_price_for_quantity")
-  private String discountedPriceForQuantity;
-
-  /**
-   * price mode.
-   */
-  @Column(name = "price_mode")
-  private LineItemPriceMode priceMode;
-
 
 }

@@ -1,11 +1,8 @@
 package io.reactivesw.order.application.model.mapper;
 
 import io.reactivesw.order.application.model.AddressView;
-import io.reactivesw.order.domain.model.value.ShippingAddressValue;
+import io.reactivesw.order.domain.model.value.ShippingAddress;
 
-/**
- * Created by Davis on 17/2/6.
- */
 public final class ShippingAddressMapper {
   /**
    * Instantiates a new Shipping address mapper.
@@ -20,8 +17,8 @@ public final class ShippingAddressMapper {
    * @param view the model
    * @return the shipping address value
    */
-  public static ShippingAddressValue modelToEntity(AddressView view) {
-    ShippingAddressValue address = new ShippingAddressValue();
+  public static ShippingAddress modelToEntity(AddressView view) {
+    ShippingAddress address = new ShippingAddress();
 
     if (view != null) {
       address.setId(view.getId());

@@ -18,16 +18,30 @@ import javax.persistence.Table;
  * Created by umasuo on 16/11/28.
  */
 @Entity
-@Table(name = "shipping_address")
+@Table(name = "billing_address")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ShippingAddressValue {
+public class BillingAddress {
 
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   @Column(name = "id")
   private String id;
+
+  /**
+   * The Created at.
+   */
+  @CreatedDate
+  @Column(name = "created_at")
+  private ZonedDateTime createdAt;
+
+  /**
+   * The Last modified at.
+   */
+  @LastModifiedDate
+  @Column(name = "last_modified_at")
+  private ZonedDateTime lastModifiedAt;
 
   /**
    * name of this address.

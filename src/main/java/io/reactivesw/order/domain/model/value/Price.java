@@ -4,24 +4,23 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Set;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * Created by umasuo on 16/11/17.
- * //TODO should we keep this in snapshot?
+ * Created by umasuo on 16/11/28.
  */
 @Entity
-@Table(name = "tax_rate")
+@Table(name = "cart_price")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class TaxRateValue {
+public class Price {
 
   /**
    * Id
@@ -33,38 +32,39 @@ public class TaxRateValue {
   protected String id;
 
   /**
-   * name.
+   * value.
    */
-  @Column
-  private String name;
-
-  /**
-   * amount.
-   */
-  @Column
-  private Float amount;
-
-  /**
-   * if included in price.
-   */
-  @Column
-  private Boolean includedInPrice;
+  @OneToOne
+  private Money value;
 
   /**
    * country.
    */
-  @Column
+  @Column(name = "country")
   private String country;
 
   /**
-   * state.
+   * customer group.
    */
-  @Column
-  private String state;
+  @Column(name = "customer_group_id")
+  private String customerGroup;
 
   /**
-   * list of sub rate.
+   * channel.
    */
-  @OneToMany
-  private Set<SubRateValue> subRates;
+  @Column(name = "chanel_id")
+  private String channel;
+
+  /**
+   * valid from.
+   */
+  @Column(name = "valid_from")
+  private ZonedDateTime validFrom;
+
+  /**
+   * valid until.
+   */
+  @Column(name = "valid_until")
+  private ZonedDateTime validUntil;
+
 }

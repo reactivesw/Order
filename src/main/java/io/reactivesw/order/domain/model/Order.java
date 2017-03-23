@@ -1,13 +1,10 @@
 package io.reactivesw.order.domain.model;
 
-import io.reactivesw.order.domain.model.value.BillingAddressValue;
-import io.reactivesw.order.domain.model.value.LineItemValue;
-import io.reactivesw.order.domain.model.value.MoneyValue;
-import io.reactivesw.order.domain.model.value.ShippingAddressValue;
-import io.reactivesw.order.domain.model.value.ShippingInfoValue;
-import io.reactivesw.order.domain.model.value.TaxedPriceValue;
+import io.reactivesw.order.domain.model.value.BillingAddress;
+import io.reactivesw.order.domain.model.value.LineItem;
+import io.reactivesw.order.domain.model.value.Money;
+import io.reactivesw.order.domain.model.value.ShippingAddress;
 import io.reactivesw.order.infrastructure.enums.OrderState;
-import io.reactivesw.order.infrastructure.enums.TaxMode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -16,8 +13,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -32,12 +30,11 @@ import javax.persistence.Version;
  * Created by umasuo on 17/1/6.
  */
 @Entity
-@Table(name = "order_order")
+@Table(name = "order")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 public class Order {
-
 
   /**
    * Id
@@ -97,49 +94,28 @@ public class Order {
   private String anonymousId;
 
   /**
-   * List of line items.
+   * List of line items, snapshot.
    */
-  @OneToMany
-  private Set<LineItemValue> lineItems;
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<LineItem> lineItems;
 
   /**
    * total price.
    */
   @OneToOne
-  private MoneyValue totalPrice;
-
-  /**
-   * Not set until the shipping address is set. Will be set automatically in the Platform TaxMode.
-   * For the External tax mode it will be set as soon as the external tax rates for all line items,
-   * custom line items, and shipping in the cart are set.
-   */
-  @OneToOne
-  private TaxedPriceValue taxedPrice;
+  private Money totalPrice;
 
   /**
    * the shipping address.
    */
   @OneToOne
-  private ShippingAddressValue shippingAddress;
+  private ShippingAddress shippingAddress;
 
   /**
    * the billing address.
    */
   @OneToOne
-  private BillingAddressValue billingAddress;
-
-  /**
-   * tax mode.
-   */
-  @Column
-  private TaxMode taxMode;
-
-  /**
-   * Set automatically when the customer is set and the customer is a member of a customer group.
-   * Used for product variant price selection.
-   */
-  @Column
-  private String customerGroup;
+  private BillingAddress billingAddress;
 
   /**
    * A two-digit country code as per ↗ ISO 3166-1 alpha-2 . Used for product variant price
@@ -154,15 +130,4 @@ public class Order {
   @Column
   private OrderState orderState;
 
-  /**
-   * Set automatically once the ShippingMethod is set.
-   */
-  @OneToOne
-  private ShippingInfoValue shippingInfo;
-
-  /**
-   * payment id.
-   */
-  @Column
-  private String paymentInfo;
 }

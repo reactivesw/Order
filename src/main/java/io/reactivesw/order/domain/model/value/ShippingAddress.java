@@ -3,6 +3,8 @@ package io.reactivesw.order.domain.model.value;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.ZonedDateTime;
 
@@ -10,61 +12,60 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
  * Created by umasuo on 16/11/28.
  */
 @Entity
-@Table(name = "cart_price")
+@Table(name = "shipping_address")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PriceValue {
+public class ShippingAddress {
 
-  /**
-   * Id
-   */
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   @Column(name = "id")
-  protected String id;
+  private String id;
 
   /**
-   * value.
+   * name of this address.
    */
-  @OneToOne
-  private MoneyValue value;
+  @Column
+  private String fullName;
 
   /**
-   * country.
+   * postal code.
    */
-  @Column(name = "country")
+  @Column
+  private String zip;
+
+  /**
+   * phone.
+   */
+  @Column
+  private String phone;
+
+  /**
+   * additional address info.
+   */
+  @Column
+  private String firstLine;
+
+  /**
+   * external id.
+   */
+  @Column
+  private String secondLine;
+
+  @Column
   private String country;
 
-  /**
-   * customer group.
-   */
-  @Column(name = "customer_group_id")
-  private String customerGroup;
+  @Column
+  private String state;
 
-  /**
-   * channel.
-   */
-  @Column(name = "chanel_id")
-  private String channel;
-
-  /**
-   * valid from.
-   */
-  @Column(name = "valid_from")
-  private ZonedDateTime validFrom;
-
-  /**
-   * valid until.
-   */
-  @Column(name = "valid_until")
-  private ZonedDateTime validUntil;
+  @Column
+  protected String city;
 
 }
