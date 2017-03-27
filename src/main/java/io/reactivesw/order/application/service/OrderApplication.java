@@ -1,25 +1,20 @@
 package io.reactivesw.order.application.service;
 
 import io.reactivesw.exception.NotExistException;
-import io.reactivesw.model.Money;
 import io.reactivesw.order.application.model.CartView;
-import io.reactivesw.order.application.model.InventoryRequest;
-import io.reactivesw.order.application.model.OrderFromCartDraft;
 import io.reactivesw.order.application.model.OrderView;
-import io.reactivesw.order.application.model.PaymentView;
+import io.reactivesw.order.application.model.mapper.OrderMapper;
+import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.service.OrderService;
-
+import io.reactivesw.order.infrastructure.exception.CheckoutFailedException;
+import io.reactivesw.order.infrastructure.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- * Created by Davis on 17/3/17.
- */
 @Service
 public class OrderApplication {
   /**
@@ -40,36 +35,26 @@ public class OrderApplication {
   private OrderService orderService;
 
   /**
-   * Create order from cart order.
+   * create order from cart Id.
    *
-   * @param draft the draft
-   * @return the order
+   * @param cartId
+   * @return
    */
-  public OrderView createOrderFromCart(OrderFromCartDraft draft) {
-    /*
-    1. get cart
-    2. update inventory
-    3. checkout
-    4. change cart status
-    5. save order
-     */
-    LOG.debug("enter createOrderFromCart, draft is : {}", draft.toString());
+  public OrderView checkout(String cartId) {
+    LOG.debug("enter: cartId: {}", cartId);
 
-    CartView cart = getCart(draft.getId(), draft.getVersion());
+    try {
+      CartView cart = restClient.getCart(cartId);
+      Order order = OrderMapper.of(cart);
+      //TODO 检查库存
+      Order result = orderService.createWithSample(order);
 
-    changeInventory(cart);
-
-    PaymentView payment = pay(draft.getCreditCardId(), cart);
-
-    changeCartStatus(draft.getId());
-
-    OrderView result = orderService.saveOrder(payment.getId(), cart);
-
-    LOG.debug("end createOrderFromCart, result is : {}", result);
-
-    return result;
+      LOG.debug("enter: order: {}", result);
+      return OrderMapper.toView(result);
+    } catch (Exception ex) {
+      throw new CheckoutFailedException("Checkout failed! " + ex.getMessage());
+    }
   }
-
 
   /**
    * use rest client to get cart.
@@ -78,81 +63,12 @@ public class OrderApplication {
    * @param version cart version
    * @return cart view
    */
-  private CartView getCart(String id, Integer version) {
-    LOG.debug("enter getCart, cart is is : {}, cart versioin is : {}", id, version);
+  public OrderView updateOrder(String id, Integer version, List<UpdateAction> actions) {
+    LOG.debug("enter: id{}, version: {}, actions: {}", id, version, actions);
 
-    CartView result = restClient.getCart(id, version);
+    Order result = orderService.updateOrder(id, version, actions);
 
-    if (result == null) {
-      LOG.debug("can not find cart by id : {} and version : {}", id, version);
-      throw new NotExistException("Cart Not Exist");
-    }
-
-    LOG.debug("end getCart");
-
-    return result;
-  }
-
-  /**
-   * use rest client to change inventory.
-   *
-   * @param cart cart view
-   */
-  private void changeInventory(CartView cart) {
-    LOG.debug("enter changeInventory, cart id is : {}", cart.getId());
-
-    List<InventoryRequest> inventoryRequests = getInventoryRequest(cart);
-
-    restClient.changeInventoryEntry(inventoryRequests);
-
-    LOG.debug("end changeInventory");
-  }
-
-  /**
-   * use rest client to pay for cart.
-   * @param creditCardId credit card id
-   * @param cart cart view
-   * @return payment view
-   */
-  private PaymentView pay(String creditCardId, CartView cart) {
-    LOG.debug("enter pay, credit card id is : {}, cart view is : ", creditCardId, cart);
-
-    Money amount = cart.getTotalPrice();
-
-    PaymentView paymentView =
-        restClient.checkout(cart.getCustomerId(), amount.getCentAmount(), creditCardId);
-
-    LOG.debug("end pay, payment view is : {}", paymentView);
-
-    return paymentView;
-  }
-
-  /**
-   * use rest client to change cart status.
-   * @param cartId cart id
-   */
-  private void changeCartStatus(String cartId) {
-    LOG.debug("enter changeCartStatus, cart id is : {}", cartId);
-
-    // TODO: 17/3/17 use rest client to change cart status
-
-    LOG.debug("end changeCartStatus");
-  }
-
-  /**
-   * get inventory request by cart.
-   *
-   * @param cart Cart
-   * @return list of Inventory Request
-   */
-  private List<InventoryRequest> getInventoryRequest(CartView cart) {
-    List<InventoryRequest> result = cart.getLineItems().stream().map(
-        lineItem -> {
-          return new InventoryRequest(
-              lineItem.getProductVariant().getSku(), lineItem.getQuantity());
-        }
-    ).collect(Collectors.toList());
-
-    return result;
+    LOG.debug("exit: result: {}", result);
+    return OrderMapper.toView(result);
   }
 }

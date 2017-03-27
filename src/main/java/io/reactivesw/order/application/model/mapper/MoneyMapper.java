@@ -3,12 +3,9 @@ package io.reactivesw.order.application.model.mapper;
 import io.reactivesw.model.Money;
 import io.reactivesw.order.domain.model.value.MoneyValue;
 
-/**
- * Created by umasuo on 16/12/8.
- */
 public class MoneyMapper {
 
-  public static MoneyValue modelToEntity(Money model) {
+  public static MoneyValue toEntity(Money model) {
     MoneyValue entity = null;
     if (model != null) {
       entity = new MoneyValue();
@@ -18,11 +15,10 @@ public class MoneyMapper {
     return entity;
   }
 
-  public static Money entityToModel(MoneyValue entity) {
+  public static Money toView(MoneyValue entity) {
     Money model = null;
     if (entity != null) {
-      model = new Money();
-
+      model = new io.reactivesw.model.Money();
       model.setCentAmount(entity.getCentAmount());
       model.setCurrencyCode(entity.getCurrencyCode());
     }

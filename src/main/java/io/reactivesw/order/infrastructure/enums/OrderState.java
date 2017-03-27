@@ -7,13 +7,21 @@ package io.reactivesw.order.infrastructure.enums;
 public enum OrderState {
 
   /**
-   * Open order state.
+   * Created order state.
    */
-  Open,
+  Created,
   /**
    * Confirmed order state.
    */
   Confirmed,
+  /**
+   * payed.
+   */
+  Payed,
+  /**
+   * Shipped
+   */
+  Shipped,
   /**
    * Complete order state.
    */

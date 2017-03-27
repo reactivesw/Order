@@ -1,23 +1,16 @@
 package io.reactivesw.order.application.service;
 
+import io.reactivesw.exception.NotExistException;
 import io.reactivesw.order.application.model.CartView;
-import io.reactivesw.order.application.model.InventoryEntryView;
-import io.reactivesw.order.application.model.InventoryRequest;
-import io.reactivesw.order.application.model.PaymentView;
-import io.reactivesw.order.infrastructure.validator.CartValidator;
+import io.reactivesw.order.application.model.ProductView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
-/**
- * Created by Davis on 17/2/6.
- */
 @Component
 public class OrderRestClient {
 
@@ -27,13 +20,10 @@ public class OrderRestClient {
   private static final Logger LOG = LoggerFactory.getLogger(OrderRestClient.class);
 
   @Value("${cart.service.uri}")
-  String cartUri;
+  private transient String cartUri;
 
-  @Value("${payment.service.uri")
-  String paymentUri;
-
-  @Value(("${inventory.service.uri}"))
-  String inventoryUri;
+  @Value("${product.service.uri}")
+  private transient String productUri;
 
   /**
    * RestTemplate.
@@ -43,61 +33,41 @@ public class OrderRestClient {
   /**
    * Gets cart.
    *
-   * @param cartId  the cart id
-   * @param version the cart version
+   * @param cartId the cart id
    * @return the cart
    */
-  public CartView getCart(String cartId, Integer version) {
-    LOG.debug("enter getCart, cart id is : {}, cart version is : {}", cartId, version);
+  public CartView getCart(String cartId) {
+    LOG.debug("enter. cartId: {}.", cartId);
 
     String url = cartUri + cartId;
-    CartView result = restTemplate.getForObject(url, CartView.class);
+    CartView result = null;
+    try {
+      result = restTemplate.getForObject(url, CartView.class);
+    } catch (HttpClientErrorException ex) {
+      if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+        LOG.debug("Get Cart failed. cartId: {}.", cartId, ex);
+        throw new NotExistException("Cart not exist. cartId: " + cartId);
+      }
+    }
 
-    CartValidator.validateVersion(result, version);
-
-    LOG.debug("end getCart, result is : {}", result);
-    return result;
-  }
-
-
-  /**
-   * Checkout payment.
-   *
-   * @param centAmount         the cent amount
-   * @param paymentMethodToken the payment method token
-   * @return the payment
-   */
-  public PaymentView checkout(String customerId, Integer centAmount, String paymentMethodToken) {
-    LOG.debug("enter checkout, centAmount is : {}, payment method token is : {}", centAmount,
-        paymentMethodToken);
-
-    MultiValueMap<String, String> request = new LinkedMultiValueMap<String, String>();
-    request.add("customerId", customerId);
-    request.add("amount", String.valueOf(centAmount));
-    request.add("token", paymentMethodToken);
-
-    PaymentView result = restTemplate.postForObject(paymentUri, request, PaymentView.class);
-    LOG.debug("end checkout, result is : {}", result);
+    LOG.debug("exit. cart: {}.", result);
     return result;
   }
 
   /**
-   * Change inventory entry inventory entry.
-   * changeInventoryEntry
+   * Gets product data from product service.
    *
-   * @return the inventory entry
+   * @param productId the address id
+   * @return the Product
    */
-  public InventoryEntryView changeInventoryEntry(List<InventoryRequest> inventoryRequestList) {
-    LOG.debug("enter changeInventoryEntry");
+  public ProductView getProduct(String productId, Integer variantId) {
+    LOG.debug("enter: productId: {}", productId);
 
-    // TODO: 17/2/6
-    MultiValueMap<String, List> request = new LinkedMultiValueMap<>();
-    request.add("requests", inventoryRequestList);
-    restTemplate.put(inventoryUri, request);
+    String url = productUri + "CartProducts/" + productId + "?variantId=" +
+        variantId;
+    ProductView product = restTemplate.getForObject(url, ProductView.class);
 
-    InventoryEntryView result = null;
-    LOG.debug("end changeInventoryEntry");
-
-    return result;
+    LOG.debug("exit: product: {}", product);
+    return product;
   }
 }

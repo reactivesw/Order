@@ -1,41 +1,31 @@
 package io.reactivesw.order.application.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.reactivesw.model.LocalizedString;
 import io.reactivesw.model.Money;
-import io.reactivesw.model.Reference;
-
 import lombok.Data;
 
-import javax.persistence.Id;
+import java.util.List;
 
-/**
- * Created by umasuo on 16/11/17.
- */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LineItemView {
 
-  @Id
   private String id;
 
   private String productId;
 
+  private Integer variantId;
+
   private LocalizedString name;
 
-  private String slug;
+  private String sku;
 
-  private ProductVariantView productVariant;
+  private List<ImageView> images;
 
-  private PriceView price;
-
-  private TaxedItemPriceView taxedPrice;
+  private Money price;
 
   private Money totalPrice;
 
   private Integer quantity;
-
-  private TaxRateView taxRate;
-
-  private Reference supplyChannel;
-
-  private Reference distributionChannel;
 }

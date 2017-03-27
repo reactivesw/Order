@@ -1,83 +1,38 @@
 package io.reactivesw.order.application.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+
 import javax.persistence.Id;
 
-/**
- * Created by umasuo on 17/2/13.
- */
 @Data
-public class AddressView {
+public class AddressView implements Serializable{
 
-  @JsonProperty
-  @Id
   private String id;
 
-  @JsonProperty
-  private String title;
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+  private ZonedDateTime createdAt;
 
-  @JsonProperty
-  private String salutation;
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+  private ZonedDateTime lastModifiedAt;
 
-  @JsonProperty
-  private String firstName;
+  private String fullName;
 
-  @JsonProperty
-  private String lastName;
+  private String zip;
 
-  @JsonProperty
-  private String streetName;
-
-  @JsonProperty
-  private String streetNumber;
-
-  @JsonProperty
-  private String additionalStreetInfo;
-
-  @JsonProperty
-  private String postalCode;
-
-  @JsonProperty
-  private String city;
-
-  @JsonProperty
-  private String region;
-
-  @JsonProperty
-  private String state;
-
-  @JsonProperty
-  private String country;
-
-  @JsonProperty
-  private String company;
-
-  @JsonProperty
-  private String department;
-
-  @JsonProperty
-  private String building;
-
-  @JsonProperty
-  private String apartment;
-
-  @JsonProperty
   private String phone;
 
-  @JsonProperty
-  private String mobile;
+  private String firstLine;
 
-  @JsonProperty
-  private String email;
+  private String secondLine;
 
-  @JsonProperty
-  private String fax;
+  private String country;
 
-  @JsonProperty
-  private String additionalAddressInfo;
+  private String state;
 
-  @JsonProperty
-  private String externalId;
+  protected String city;
 }

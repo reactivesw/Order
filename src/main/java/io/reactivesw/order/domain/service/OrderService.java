@@ -2,16 +2,16 @@ package io.reactivesw.order.domain.service;
 
 import io.reactivesw.exception.ConflictException;
 import io.reactivesw.exception.NotExistException;
-import io.reactivesw.order.application.model.CartView;
-import io.reactivesw.order.application.model.OrderView;
-import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.infrastructure.repository.OrderRepository;
-
+import io.reactivesw.order.infrastructure.update.UpdateAction;
+import io.reactivesw.order.infrastructure.update.UpdaterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by Davis on 17/2/6.
@@ -29,26 +29,26 @@ public class OrderService {
   @Autowired
   private transient OrderRepository orderRepository;
 
+  /**
+   * cart update service.
+   */
+  @Autowired
+  private transient UpdaterService orderUpdater;
 
   /**
-   * Save order order.
+   * Save order.
    *
-   * @param paymentId the payment id
-   * @param cart      the cart
+   * @param order sample
    * @return the order view
    */
-  public OrderView saveOrder(String paymentId, CartView cart) {
-    LOG.debug("enter saveOrder, payment id is : {}, cart view is : {}", paymentId, cart);
+  public Order createWithSample(Order order) {
+    LOG.debug("enter: order: {},", order);
 
-    Order entity = OrderMapper.of(cart, paymentId);
+    Order savedOrder = orderRepository.save(order);
 
-    Order savedEntity = orderRepository.save(entity);
+    LOG.debug("end: savedOrder : {}", savedOrder);
 
-    OrderView result = OrderMapper.mapToModel(savedEntity);
-
-    LOG.debug("end createOrderFromCart, result is : {}", result);
-
-    return result;
+    return savedOrder;
   }
 
   /**
@@ -57,25 +57,8 @@ public class OrderService {
    * @param orderId the order id
    * @return the order by id
    */
-  public OrderView getOrderById(String orderId) {
-    LOG.debug("enter getOrderById, order id is : {}", orderId);
-
-    Order entity = getOrderEntity(orderId);
-    OrderView result = OrderMapper.mapToModel(entity);
-
-    LOG.debug("end getOrderById, result is : {}", result);
-
-    return result;
-  }
-
-  /**
-   * get order entity.
-   *
-   * @param orderId the order id
-   * @return the order entity
-   */
-  public Order getOrderEntity(String orderId) {
-    LOG.debug("enter getOrderEntity, order is is : {}", orderId);
+  public Order getById(String orderId) {
+    LOG.debug("enter getById, order id is : {}", orderId);
 
     Order result = orderRepository.findOne(orderId);
 
@@ -84,9 +67,44 @@ public class OrderService {
       throw new NotExistException("Order Not Exist");
     }
 
-    LOG.debug("end getOrderEntity, result is : {}", result);
+    LOG.debug("end getById, result is : {}", result);
 
     return result;
+  }
+
+  /**
+   * Gets order by customerId.
+   *
+   * @param customerId the customerID
+   * @return the order by id
+   */
+  public List<Order> getByCustomerId(String customerId) {
+    LOG.debug("enter getById, CustomerId : {}", customerId);
+
+    List<Order> entities = orderRepository.findByCustomerId(customerId);
+
+    LOG.debug("end getById, result is : {}", entities);
+
+    return entities;
+  }
+
+  /**
+   * update order with actions.
+   *
+   * @param id
+   * @param version
+   * @param actions
+   * @return
+   */
+  public Order updateOrder(String id, Integer version, List<UpdateAction> actions) {
+    Order order = this.getById(id);
+
+    this.validateVersion(version, order.getVersion());
+    //update data from action
+    actions.stream().forEach(
+        action -> orderUpdater.handle(order, action)
+    );
+    return this.orderRepository.save(order);
   }
 
   /**
@@ -98,8 +116,8 @@ public class OrderService {
   public void deleteOrder(String orderId, Integer version) {
     LOG.debug("enter deleteOrder, order id is : {}", orderId);
 
-    Order entity = getOrderEntity(orderId);
-    validateVersion(entity, version);
+    Order entity = getById(orderId);
+    validateVersion(version, entity.getVersion());
     orderRepository.delete(entity);
 
     LOG.debug("end deleteOrder");
@@ -107,14 +125,11 @@ public class OrderService {
 
   /**
    * validate order version.
-   *
-   * @param entity  order entity
-   * @param version expect version
    */
-  private void validateVersion(Order entity, Integer version) {
-    if (!version.equals(entity.getVersion())) {
+  private void validateVersion(Integer inputVersion, Integer curVersion) {
+    if (!curVersion.equals(inputVersion)) {
       LOG.debug("order version can not match, expect version is : {}, real version is : {}",
-          version, entity.getVersion());
+          inputVersion, curVersion);
       throw new ConflictException("Order Version Not Match");
     }
   }

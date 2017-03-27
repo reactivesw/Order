@@ -1,29 +1,30 @@
 package io.reactivesw.order.application.controller;
 
-import io.reactivesw.order.application.model.OrderFromCartDraft;
 import io.reactivesw.order.application.model.OrderView;
+import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.application.service.OrderApplication;
+import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.service.OrderService;
 import io.reactivesw.order.infrastructure.Router;
-
+import io.reactivesw.order.infrastructure.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import java.util.List;
 
 
-/**
- * Created by Davis on 17/2/6.
- */
 @RestController
+@CrossOrigin
 public class OrderController {
   /**
    * log.
@@ -43,22 +44,19 @@ public class OrderController {
   private transient OrderApplication orderApplication;
 
   /**
-   * create order from cart.
+   * checkout from cart.
    *
-   * @param draft OrderFromCartDraft
-   * @return Order order
+   * @return OrderView
    */
   @PostMapping(Router.ORDER_ROOT)
-  public OrderView createOrderFromCart(@RequestBody @Valid OrderFromCartDraft draft) {
-    LOG.debug("enter createOrderFromCart, draft is : {}", draft.toString());
+  public OrderView checkout(@RequestParam String cartId) {
+    LOG.info("enter. cartId: {}.", cartId);
 
-    OrderView result = orderApplication.createOrderFromCart(draft);
+    OrderView orderView = orderApplication.checkout(cartId);
 
-    LOG.debug("end createOrderFromCart, result is : {}", result.toString());
-
-    return result;
+    LOG.info("exit. order: {}.", orderView);
+    return orderView;
   }
-
 
   /**
    * Gets order by id.
@@ -68,13 +66,40 @@ public class OrderController {
    */
   @GetMapping(Router.ORDER_WITH_ID)
   public OrderView getOrderById(@PathVariable(Router.ORDER_ID) String orderId) {
-    LOG.debug("enter getOrderById, order id is : {}", orderId);
+    LOG.info("enter. orderId: {}.", orderId);
 
-    OrderView result = orderService.getOrderById(orderId);
+    Order result = orderService.getById(orderId);
 
-    LOG.debug("end getOrderById, result is : {}", result);
+    LOG.info("exit. order: {}.", result);
+    return OrderMapper.toView(result);
+  }
 
-    return result;
+  @GetMapping(Router.ORDER_ROOT)
+  public List<OrderView> getOrdersByCustomerId(@RequestParam String customerId) {
+    LOG.info("enter. order: {}.", customerId);
+
+    List<Order> orders = orderService.getByCustomerId(customerId);
+
+    LOG.info("exit. order: {}.", orders);
+    return OrderMapper.toView(orders);
+  }
+
+  /**
+   * update cart with cart id.
+   *
+   * @param orderId String
+   * @return Cart
+   */
+  @PutMapping(Router.ORDER_WITH_ID)
+  public OrderView updateOrder(@PathVariable(Router.ORDER_ID) String orderId,
+                              @RequestBody UpdateRequest updateRequest) {
+    LOG.info("enter. id: {}, updateRequest: {}.", orderId, updateRequest);
+
+    OrderView order = orderApplication.updateOrder(orderId, updateRequest.getVersion(),
+        updateRequest.getActions());
+
+    LOG.info("exit. order: {}.", order);
+    return order;
   }
 
   /**
@@ -86,10 +111,10 @@ public class OrderController {
   @DeleteMapping(Router.ORDER_WITH_ID)
   public void deleteOrder(@PathVariable(Router.ORDER_ID) String orderId,
                           @RequestParam Integer version) {
-    LOG.debug("enter deleteOrder, order id is : {}", orderId);
+    LOG.info("enter. order: {}.", orderId);
 
     orderService.deleteOrder(orderId, version);
 
-    LOG.debug("end deleteOrder");
+    LOG.info("exit. deleteOrder.");
   }
 }

@@ -1,13 +1,9 @@
 package io.reactivesw.order.domain.model;
 
-import io.reactivesw.order.domain.model.value.BillingAddressValue;
-import io.reactivesw.order.domain.model.value.LineItemValue;
+import io.reactivesw.order.domain.model.value.LineItem;
 import io.reactivesw.order.domain.model.value.MoneyValue;
-import io.reactivesw.order.domain.model.value.ShippingAddressValue;
-import io.reactivesw.order.domain.model.value.ShippingInfoValue;
-import io.reactivesw.order.domain.model.value.TaxedPriceValue;
+import io.reactivesw.order.domain.model.value.ShippingAddress;
 import io.reactivesw.order.infrastructure.enums.OrderState;
-import io.reactivesw.order.infrastructure.enums.TaxMode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -16,11 +12,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -28,16 +26,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-/**
- * Created by umasuo on 17/1/6.
- */
 @Entity
-@Table(name = "order_order")
+@Table(name = "orders")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 public class Order {
-
 
   /**
    * Id
@@ -62,7 +56,6 @@ public class Order {
   @Column(name = "last_modified_at")
   protected ZonedDateTime lastModifiedAt;
 
-
   /**
    * version.
    */
@@ -77,69 +70,28 @@ public class Order {
   private ZonedDateTime completedAt;
 
   /**
-   * String that uniquely identifies an order. It can be used to create more human-readable (in
-   * contrast to ID) identifier for the order. It should be unique across a merchant. Once it’s
-   * set it cannot be changed.
-   */
-  @Column(name = "order_name")
-  private String orderName;
-
-  /**
    * customer id.
    */
   @Column(name = "customer_id")
   private String customerId;
 
   /**
-   * anonymous id.
+   * List of line items, snapshot.
    */
-  @Column(name = "anonymous_id")
-  private String anonymousId;
-
-  /**
-   * List of line items.
-   */
-  @OneToMany
-  private Set<LineItemValue> lineItems;
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<LineItem> lineItems;
 
   /**
    * total price.
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private MoneyValue totalPrice;
-
-  /**
-   * Not set until the shipping address is set. Will be set automatically in the Platform TaxMode.
-   * For the External tax mode it will be set as soon as the external tax rates for all line items,
-   * custom line items, and shipping in the cart are set.
-   */
-  @OneToOne
-  private TaxedPriceValue taxedPrice;
 
   /**
    * the shipping address.
    */
-  @OneToOne
-  private ShippingAddressValue shippingAddress;
-
-  /**
-   * the billing address.
-   */
-  @OneToOne
-  private BillingAddressValue billingAddress;
-
-  /**
-   * tax mode.
-   */
-  @Column
-  private TaxMode taxMode;
-
-  /**
-   * Set automatically when the customer is set and the customer is a member of a customer group.
-   * Used for product variant price selection.
-   */
-  @Column
-  private String customerGroup;
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private ShippingAddress shippingAddress;
 
   /**
    * A two-digit country code as per ↗ ISO 3166-1 alpha-2 . Used for product variant price
@@ -154,15 +106,4 @@ public class Order {
   @Column
   private OrderState orderState;
 
-  /**
-   * Set automatically once the ShippingMethod is set.
-   */
-  @OneToOne
-  private ShippingInfoValue shippingInfo;
-
-  /**
-   * payment id.
-   */
-  @Column
-  private String paymentInfo;
 }
