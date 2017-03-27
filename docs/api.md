@@ -3,9 +3,9 @@ Order service.
 
 # 2 Model
 ## 2.1 OrderView
-| field name        | field type        | comments |
+| field name        | field type        | comments  |
 |----|----|----|
-| id                | String            | |
+| id                | String            | uuid      |
 | createdAt         | ZonedDateTime     | |
 | lastModifiedAt    | ZonedDateTime     | |
 | completedAt       | ZonedDateTime     | |
@@ -13,13 +13,12 @@ Order service.
 | lineItems         | List<LineItemView>| |
 | totalPrice        | Money             | |
 | shippingAddress   | AddressView       | |
-| billingAddress    | AddressView       | |
 | orderState        | OrderState        | |
 
-## 2.2 LineItemView
-| field name        | field type        | comments |
+## 2.2 LineItemView 
+| field name        | field type        | comments  |
 |----|----|----|
-| id                | String            | |
+| id                | String            | uuid      |
 | productId         | String            | |
 | name              | LocalizedString   | |
 | variantId         | Integer           | | 
@@ -109,11 +108,6 @@ Actions for update cart
   private Integer quantity;
 ```
 ## 4.4 SetShippingAddress
-```Java
-  @NotNull
-  private String addressId;
-```
-## 4.5 SetBillingAddress
 ```Java
   @NotNull
   private String addressId;

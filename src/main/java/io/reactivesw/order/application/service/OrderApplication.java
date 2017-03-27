@@ -46,6 +46,7 @@ public class OrderApplication {
     try {
       CartView cart = restClient.getCart(cartId);
       Order order = OrderMapper.of(cart);
+      //TODO 检查库存
       Order result = orderService.createWithSample(order);
 
       LOG.debug("enter: order: {}", result);

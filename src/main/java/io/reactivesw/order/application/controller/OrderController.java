@@ -91,7 +91,7 @@ public class OrderController {
    * @return Cart
    */
   @PutMapping(Router.ORDER_WITH_ID)
-  public OrderView updateCart(@PathVariable(Router.ORDER_ID) String orderId,
+  public OrderView updateOrder(@PathVariable(Router.ORDER_ID) String orderId,
                               @RequestBody UpdateRequest updateRequest) {
     LOG.info("enter. id: {}, updateRequest: {}.", orderId, updateRequest);
 
