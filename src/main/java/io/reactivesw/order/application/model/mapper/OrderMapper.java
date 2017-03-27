@@ -5,6 +5,9 @@ import io.reactivesw.order.application.model.OrderView;
 import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.infrastructure.enums.OrderState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class OrderMapper {
   /**
    * Instantiates a new Order mapper.
@@ -16,20 +19,16 @@ public final class OrderMapper {
   /**
    * Of order entity.
    *
-   * @param cart    the cart
-   * @param paymentId the payment id
+   * @param cart the cart
    * @return the order entity
    */
-  public static Order of(CartView cart, String paymentId) {
+  public static Order of(CartView cart) {
     Order entity = new Order();
 
-    entity.setCompletedAt(null);
-    entity.setOrderName(null);
     entity.setCustomerId(cart.getCustomerId());
-    entity.setLineItems(LineItemMapper.modelToEntity(cart.getLineItems()));
-    entity.setTotalPrice(MoneyMapper.modelToEntity(cart.getTotalPrice()));
-    entity.setCountry(cart.getCountry());
-    entity.setOrderState(OrderState.Complete);
+    entity.setLineItems(LineItemMapper.toEntity(cart.getLineItems()));
+    entity.setTotalPrice(MoneyMapper.toEntity(cart.getTotalPrice()));
+    entity.setOrderState(OrderState.Created);
 
     return entity;
   }
@@ -40,7 +39,7 @@ public final class OrderMapper {
    * @param entity the entity
    * @return the order
    */
-  public static OrderView mapToModel(Order entity) {
+  public static OrderView toView(Order entity) {
     OrderView model = new OrderView();
 
     model.setId(entity.getId());
@@ -49,10 +48,22 @@ public final class OrderMapper {
     model.setLastModifiedAt(entity.getLastModifiedAt());
     model.setCompletedAt(entity.getCompletedAt());
     model.setCustomerId(entity.getCustomerId());
-    model.setLineItems(LineItemMapper.entityToModel(entity.getLineItems()));
-    model.setTotalPrice(MoneyMapper.entityToModel(entity.getTotalPrice()));
+    model.setLineItems(LineItemMapper.toViews(entity.getLineItems()));
+    model.setTotalPrice(MoneyMapper.toView(entity.getTotalPrice()));
     model.setOrderState(entity.getOrderState());
 
     return model;
+  }
+
+  /**
+   * convert list of order to view.
+   *
+   * @param orders
+   * @return
+   */
+  public static List<OrderView> toView(List<Order> orders) {
+    List<OrderView> orderViews = new ArrayList<>();
+    orders.stream().forEach(order -> orderViews.add(toView(order)));
+    return orderViews;
   }
 }

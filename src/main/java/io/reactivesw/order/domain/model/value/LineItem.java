@@ -44,7 +44,7 @@ public class LineItem {
   /**
    * name in localized string.
    */
-  @Column
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private LocalizedStringValue name;
 
   /**
@@ -67,7 +67,7 @@ public class LineItem {
   /**
    * price.
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private MoneyValue price;
 
   /**
@@ -76,7 +76,7 @@ public class LineItem {
    * the product price multiplied by the quantity. totalPrice may or may not include the taxes:
    * it depends on the taxRate.includedInPrice property.
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private MoneyValue totalPrice;
 
   /**

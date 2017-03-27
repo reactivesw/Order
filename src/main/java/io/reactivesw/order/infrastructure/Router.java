@@ -28,5 +28,5 @@ public final class Router {
   /**
    * The constant order_health_check.
    */
-  public static final String ORDER_HEALTH_CHECK = ORDER_ROOT + "health";
+  public static final String HEALTH_CHECK = ORDER_ROOT + "health";
 }

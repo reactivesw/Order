@@ -1,6 +1,6 @@
 package io.reactivesw.order.application.controller;
 
-import static io.reactivesw.order.infrastructure.Router.ORDER_HEALTH_CHECK;
+import static io.reactivesw.order.infrastructure.Router.HEALTH_CHECK;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class HealthController {
    *
    * @return service name.
    */
-  @GetMapping(ORDER_HEALTH_CHECK)
+  @GetMapping(HEALTH_CHECK)
   public String health() {
     return serviceName + ", system time: " + System.currentTimeMillis();
   }

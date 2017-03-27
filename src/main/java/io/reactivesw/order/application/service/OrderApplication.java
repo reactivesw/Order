@@ -2,15 +2,19 @@ package io.reactivesw.order.application.service;
 
 import io.reactivesw.exception.NotExistException;
 import io.reactivesw.order.application.model.CartView;
+import io.reactivesw.order.application.model.OrderView;
+import io.reactivesw.order.application.model.mapper.OrderMapper;
+import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.service.OrderService;
+import io.reactivesw.order.infrastructure.exception.CheckoutFailedException;
+import io.reactivesw.order.infrastructure.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by Davis on 17/3/17.
- */
+import java.util.List;
+
 @Service
 public class OrderApplication {
   /**
@@ -31,24 +35,39 @@ public class OrderApplication {
   private OrderService orderService;
 
   /**
+   * create order from cart Id.
+   *
+   * @param cartId
+   * @return
+   */
+  public OrderView checkout(String cartId) {
+    LOG.debug("enter: cartId: {}", cartId);
+
+    try {
+      CartView cart = restClient.getCart(cartId);
+      Order order = OrderMapper.of(cart);
+      Order result = orderService.createWithSample(order);
+
+      LOG.debug("enter: order: {}", result);
+      return OrderMapper.toView(result);
+    } catch (Exception ex) {
+      throw new CheckoutFailedException("Checkout failed! " + ex.getMessage());
+    }
+  }
+
+  /**
    * use rest client to get cart.
    *
    * @param id      cart id
    * @param version cart version
    * @return cart view
    */
-  private CartView getCart(String id, Integer version) {
-    LOG.debug("enter getCart, cart is is : {}, cart versioin is : {}", id, version);
+  public OrderView updateOrder(String id, Integer version, List<UpdateAction> actions) {
+    LOG.debug("enter: id{}, version: {}, actions: {}", id, version, actions);
 
-    CartView result = restClient.getCart(id, version);
+    Order result = orderService.updateOrder(id, version, actions);
 
-    if (result == null) {
-      LOG.debug("can not find cart by id : {} and version : {}", id, version);
-      throw new NotExistException("Cart Not Exist");
-    }
-
-    LOG.debug("end getCart");
-
-    return result;
+    LOG.debug("exit: result: {}", result);
+    return OrderMapper.toView(result);
   }
 }

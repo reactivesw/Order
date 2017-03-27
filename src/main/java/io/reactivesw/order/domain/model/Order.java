@@ -28,7 +28,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
@@ -71,47 +71,33 @@ public class Order {
   private ZonedDateTime completedAt;
 
   /**
-   * String that uniquely identifies an order. It can be used to create more human-readable (in
-   * contrast to ID) identifier for the order. It should be unique across a merchant. Once it’s
-   * set it cannot be changed.
-   */
-  @Column(name = "order_name")
-  private String orderName;
-
-  /**
    * customer id.
    */
   @Column(name = "customer_id")
   private String customerId;
 
   /**
-   * anonymous id.
-   */
-  @Column(name = "anonymous_id")
-  private String anonymousId;
-
-  /**
    * List of line items, snapshot.
    */
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<LineItem> lineItems;
 
   /**
    * total price.
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private MoneyValue totalPrice;
 
   /**
    * the shipping address.
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private ShippingAddress shippingAddress;
 
   /**
    * the billing address.
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private BillingAddress billingAddress;
 
   /**

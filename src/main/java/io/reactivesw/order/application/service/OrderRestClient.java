@@ -1,12 +1,14 @@
 package io.reactivesw.order.application.service;
 
+import io.reactivesw.exception.NotExistException;
 import io.reactivesw.order.application.model.CartView;
 import io.reactivesw.order.application.model.ProductView;
-import io.reactivesw.order.infrastructure.validator.CartValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -31,19 +33,24 @@ public class OrderRestClient {
   /**
    * Gets cart.
    *
-   * @param cartId  the cart id
-   * @param version the cart version
+   * @param cartId the cart id
    * @return the cart
    */
-  public CartView getCart(String cartId, Integer version) {
-    LOG.debug("enter getCart, cart id is : {}, cart version is : {}", cartId, version);
+  public CartView getCart(String cartId) {
+    LOG.debug("enter. cartId: {}.", cartId);
 
     String url = cartUri + cartId;
-    CartView result = restTemplate.getForObject(url, CartView.class);
+    CartView result = null;
+    try {
+      result = restTemplate.getForObject(url, CartView.class);
+    } catch (HttpClientErrorException ex) {
+      if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+        LOG.debug("Get Cart failed. cartId: {}.", cartId, ex);
+        throw new NotExistException("Cart not exist. cartId: " + cartId);
+      }
+    }
 
-    CartValidator.validateVersion(result, version);
-
-    LOG.debug("end getCart, result is : {}", result);
+    LOG.debug("exit. cart: {}.", result);
     return result;
   }
 
