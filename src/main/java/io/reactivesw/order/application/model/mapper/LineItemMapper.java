@@ -1,8 +1,10 @@
 package io.reactivesw.order.application.model.mapper;
 
 import com.google.common.collect.Lists;
+import io.reactivesw.model.Money;
 import io.reactivesw.order.application.model.LineItemView;
 import io.reactivesw.order.domain.model.value.LineItem;
+import io.reactivesw.order.domain.model.value.MoneyValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,11 @@ public final class LineItemMapper {
 
     entity.setProductId(model.getProductId());
     entity.setName(LocalizedStringMapper.modelToEntityDefaultNull(model.getName()));
-    entity.setPrice(PriceMapper.modelToEntity(model.getPrice()));
+    if (entity.getPrice() != null) {
+      MoneyValue money = new MoneyValue(model.getPrice().getCurrencyCode(), model.getPrice()
+          .getCentAmount());
+      entity.setPrice(money);
+    }
     entity.setTotalPrice(MoneyMapper.modelToEntity(model.getTotalPrice()));
     entity.setQuantity(model.getQuantity());
 
@@ -78,11 +84,16 @@ public final class LineItemMapper {
       model.setProductId(entity.getProductId());
       model.setName(LocalizedStringMapper.entityToModelDefaultNew(entity.getName()));
       model.setVariantId(entity.getVariantId());
-      model.setPrice(PriceMapper.entityToModel(entity.getPrice()));
+
+      if (entity.getPrice() != null) {
+        Money moneyView = new Money(entity.getPrice().getCurrencyCode(), entity.getPrice()
+            .getCentAmount());
+        model.setPrice(moneyView);
+      }
+
       model.setTotalPrice(MoneyMapper.entityToModel(entity.getTotalPrice()));
       model.setQuantity(entity.getQuantity());
     }
-
     return model;
   }
 }

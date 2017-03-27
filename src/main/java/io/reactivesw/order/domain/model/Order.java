@@ -2,7 +2,7 @@ package io.reactivesw.order.domain.model;
 
 import io.reactivesw.order.domain.model.value.BillingAddress;
 import io.reactivesw.order.domain.model.value.LineItem;
-import io.reactivesw.order.domain.model.value.Money;
+import io.reactivesw.order.domain.model.value.MoneyValue;
 import io.reactivesw.order.domain.model.value.ShippingAddress;
 import io.reactivesw.order.infrastructure.enums.OrderState;
 import lombok.Data;
@@ -19,6 +19,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -26,9 +27,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-/**
- * Created by umasuo on 17/1/6.
- */
 @Entity
 @Table(name = "order")
 @Data
@@ -58,7 +56,6 @@ public class Order {
   @LastModifiedDate
   @Column(name = "last_modified_at")
   protected ZonedDateTime lastModifiedAt;
-
 
   /**
    * version.
@@ -96,14 +93,14 @@ public class Order {
   /**
    * List of line items, snapshot.
    */
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<LineItem> lineItems;
 
   /**
    * total price.
    */
   @OneToOne
-  private Money totalPrice;
+  private MoneyValue totalPrice;
 
   /**
    * the shipping address.

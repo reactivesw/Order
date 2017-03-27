@@ -7,8 +7,10 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -59,14 +61,14 @@ public class LineItem {
   /**
    * list of images.
    */
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<Image> images;
 
   /**
    * price.
    */
   @OneToOne
-  private Price price;
+  private MoneyValue price;
 
   /**
    * The total price of this line item. If the line item is discounted, then the totalPrice is
@@ -75,7 +77,7 @@ public class LineItem {
    * it depends on the taxRate.includedInPrice property.
    */
   @OneToOne
-  private Money totalPrice;
+  private MoneyValue totalPrice;
 
   /**
    * quantity.

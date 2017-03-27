@@ -42,22 +42,9 @@ public class OrderView {
   private ZonedDateTime completedAt;
 
   /**
-   * String that uniquely identifies an order.
-   * It can be used to create more human-readable (in contrast to ID) identifier for the order.
-   * It should be unique across a merchant. Once it’s set it cannot be changed.
-   */
-  private String orderNumber;
-
-  /**
    * The Customer id.
    */
   private String customerId;
-
-  /**
-   * Identifies cart and order belonging to an anonymous session
-   * (the customer has not signed up/in yet).
-   */
-  private String anonymousId;
 
   /**
    * Array of LineItem.
@@ -78,11 +65,6 @@ public class OrderView {
    * The Billing address.
    */
   private AddressView billingAddress;
-
-  /**
-   * A two-digit country code as per ISO 3166-1 alpha-2 . Used for product variant price selection.
-   */
-  private String country;
 
   /**
    * One of the four predefined OrderStates.

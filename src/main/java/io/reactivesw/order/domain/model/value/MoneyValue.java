@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "money")
-public class Money {
+public class MoneyValue {
 
   /**
    * Id
@@ -39,7 +39,7 @@ public class Money {
   /**
    * default constructor.
    */
-  public Money() {
+  public MoneyValue() {
 
   }
 
@@ -49,7 +49,7 @@ public class Money {
    * @param currencyCode String
    * @param centAmount   Integer
    */
-  public Money(String currencyCode, Integer centAmount) {
+  public MoneyValue(String currencyCode, Integer centAmount) {
     this.currencyCode = currencyCode;
     this.centAmount = centAmount;
   }
@@ -105,8 +105,8 @@ public class Money {
       result = true;
     }
 
-    if (this != obj && obj instanceof Money) {
-      Money that = (Money) obj;
+    if (this != obj && obj instanceof MoneyValue) {
+      MoneyValue that = (MoneyValue) obj;
       result = Objects.equals(this.getCentAmount(), that.getCentAmount())
           && Objects.equals(this.getCurrencyCode(), that.getCurrencyCode());
     }

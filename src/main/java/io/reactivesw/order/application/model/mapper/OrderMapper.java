@@ -48,12 +48,9 @@ public final class OrderMapper {
     model.setCreatedAt(entity.getCreatedAt());
     model.setLastModifiedAt(entity.getLastModifiedAt());
     model.setCompletedAt(entity.getCompletedAt());
-    model.setOrderNumber(entity.getOrderName());
     model.setCustomerId(entity.getCustomerId());
-    model.setAnonymousId(entity.getAnonymousId());
     model.setLineItems(LineItemMapper.entityToModel(entity.getLineItems()));
     model.setTotalPrice(MoneyMapper.entityToModel(entity.getTotalPrice()));
-    model.setCountry(entity.getCountry());
     model.setOrderState(entity.getOrderState());
 
     return model;

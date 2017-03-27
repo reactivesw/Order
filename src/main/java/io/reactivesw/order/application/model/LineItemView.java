@@ -1,10 +1,14 @@
 package io.reactivesw.order.application.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.reactivesw.model.LocalizedString;
 import io.reactivesw.model.Money;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LineItemView {
 
   private String id;
@@ -15,9 +19,11 @@ public class LineItemView {
 
   private LocalizedString name;
 
-  private String slug;
+  private String sku;
 
-  private PriceView price;
+  private List<ImageView> images;
+
+  private Money price;
 
   private Money totalPrice;
 
