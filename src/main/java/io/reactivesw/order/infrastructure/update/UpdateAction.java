@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.reactivesw.order.application.model.action.AddLineItem;
 import io.reactivesw.order.application.model.action.RemoveLineItem;
-import io.reactivesw.order.application.model.action.SetBillingAddress;
 import io.reactivesw.order.application.model.action.SetLineItemQuantity;
 import io.reactivesw.order.application.model.action.SetShippingAddress;
 import io.reactivesw.order.infrastructure.util.OrderUpdateActionUtils;
@@ -19,8 +18,6 @@ import io.reactivesw.order.infrastructure.util.OrderUpdateActionUtils;
         .SET_LINE_ITEM_QUANTITY),
     @JsonSubTypes.Type(value = SetShippingAddress.class, name = OrderUpdateActionUtils
         .SET_SHIPPING_ADDRESS),
-    @JsonSubTypes.Type(value = SetBillingAddress.class, name = OrderUpdateActionUtils
-        .SET_BILLING_ADDRESS),
 })
 public interface UpdateAction {
   String getActionName();

@@ -1,6 +1,5 @@
 package io.reactivesw.order.domain.model;
 
-import io.reactivesw.order.domain.model.value.BillingAddress;
 import io.reactivesw.order.domain.model.value.LineItem;
 import io.reactivesw.order.domain.model.value.MoneyValue;
 import io.reactivesw.order.domain.model.value.ShippingAddress;
@@ -93,12 +92,6 @@ public class Order {
    */
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private ShippingAddress shippingAddress;
-
-  /**
-   * the billing address.
-   */
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private BillingAddress billingAddress;
 
   /**
    * A two-digit country code as per ↗ ISO 3166-1 alpha-2 . Used for product variant price

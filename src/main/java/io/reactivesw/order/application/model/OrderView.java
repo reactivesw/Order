@@ -62,11 +62,6 @@ public class OrderView {
   private AddressView shippingAddress;
 
   /**
-   * The Billing address.
-   */
-  private AddressView billingAddress;
-
-  /**
    * One of the four predefined OrderStates.
    */
   private OrderState orderState;
