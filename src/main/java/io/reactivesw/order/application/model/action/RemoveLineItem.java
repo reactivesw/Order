@@ -9,14 +9,15 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Decreases the quantity of the given LineItem. If after the update the quantity of the line
- * item is not greater than 0 or the quantity is not specified, the line item is removed from the
- * cart.
- * Created by umasuo on 16/12/5.
+ * remove line item from order.
  */
 @Data
 public class RemoveLineItem implements UpdateAction, Serializable {
 
+  /**
+   * auto generated serial version.
+   */
+  private static final long serialVersionUID = 3882818062009739796L;
   /**
    * line item id.
    */
@@ -28,6 +29,11 @@ public class RemoveLineItem implements UpdateAction, Serializable {
    */
   private Integer quantity;
 
+  /**
+   * get action name.
+   *
+   * @return
+   */
   @Override
   public String getActionName() {
     return OrderUpdateActionUtils.REMOVE_LINE_ITEM;

@@ -3,14 +3,17 @@ package io.reactivesw.order.application.model.mapper;
 import io.reactivesw.order.application.model.AddressView;
 import io.reactivesw.order.domain.model.value.ShippingAddress;
 
+/**
+ * shipping address mapper.
+ */
 public final class ShippingAddressMapper {
+
   /**
-   * Instantiates a new Shipping address mapper.
+   * private default constructor.
    */
   private ShippingAddressMapper() {
   }
 
-  
   /**
    * Model to entity shipping address value.
    *
@@ -39,7 +42,7 @@ public final class ShippingAddressMapper {
 
       address.setCity(view.getCity());
     }
-    
+
     return address;
   }
 }

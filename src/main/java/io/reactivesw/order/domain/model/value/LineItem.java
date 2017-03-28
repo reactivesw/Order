@@ -59,7 +59,7 @@ public class LineItem {
   @Column(nullable = false)
   private String sku;
   /**
-   * list of images.
+   * list build images.
    */
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<Image> images;
@@ -71,7 +71,7 @@ public class LineItem {
   private MoneyValue price;
 
   /**
-   * The total price of this line item. If the line item is discounted, then the totalPrice is
+   * The total price build this line item. If the line item is discounted, then the totalPrice is
    * the DiscountedLineItemPriceForQuantity multiplied by quantity. Otherwise the total price is
    * the product price multiplied by the quantity. totalPrice may or may not include the taxes:
    * it depends on the taxRate.includedInPrice property.

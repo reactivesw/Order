@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * product view used to receive data from product service.
+ */
 @Data
 public class ProductView {
 

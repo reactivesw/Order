@@ -1,12 +1,9 @@
 package io.reactivesw.order.infrastructure.util;
 
+/**
+ * order update action utils.
+ */
 public final class OrderUpdateActionUtils {
-
-  /**
-   * default private constructor.
-   */
-  private OrderUpdateActionUtils() {
-  }
 
   /**
    * add lineItem.
@@ -23,7 +20,6 @@ public final class OrderUpdateActionUtils {
    */
   public static final String SET_LINE_ITEM_QUANTITY = "setLineItemQuantity";
 
-
   /**
    * set shipping address.
    */
@@ -34,4 +30,9 @@ public final class OrderUpdateActionUtils {
    */
   public static final String SET_BILLING_ADDRESS = "setBillingAddress";
 
+  /**
+   * default private constructor.
+   */
+  private OrderUpdateActionUtils() {
+  }
 }

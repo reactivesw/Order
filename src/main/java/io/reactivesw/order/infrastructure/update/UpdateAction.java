@@ -8,6 +8,9 @@ import io.reactivesw.order.application.model.action.SetLineItemQuantity;
 import io.reactivesw.order.application.model.action.SetShippingAddress;
 import io.reactivesw.order.infrastructure.util.OrderUpdateActionUtils;
 
+/**
+ * update action.
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property =
     "action")
 @JsonSubTypes( {
@@ -20,5 +23,10 @@ import io.reactivesw.order.infrastructure.util.OrderUpdateActionUtils;
         .SET_SHIPPING_ADDRESS),
 })
 public interface UpdateAction {
+  /**
+   * get action name.
+   *
+   * @return
+   */
   String getActionName();
 }

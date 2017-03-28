@@ -6,8 +6,23 @@ import io.reactivesw.order.domain.model.value.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageMapper {
+/**
+ * image mapper.
+ */
+public final class ImageMapper {
 
+  /**
+   * private default constructor.
+   */
+  private ImageMapper() {
+  }
+
+  /**
+   * to entity.
+   *
+   * @param imageView
+   * @return
+   */
   public static Image toEntity(ImageView imageView) {
     Image image = null;
     if (imageView != null) {
@@ -18,6 +33,12 @@ public class ImageMapper {
     return image;
   }
 
+  /**
+   * list view to list entity.
+   *
+   * @param viewList
+   * @return
+   */
   public static List<Image> toEntities(List<ImageView> viewList) {
     List<Image> images = new ArrayList<>();
     if (viewList != null && !viewList.isEmpty()) {
@@ -26,6 +47,12 @@ public class ImageMapper {
     return images;
   }
 
+  /**
+   * to view.
+   *
+   * @param image
+   * @return
+   */
   public static ImageView toView(Image image) {
     ImageView imageView = null;
     if (image != null) {
@@ -36,6 +63,12 @@ public class ImageMapper {
     return imageView;
   }
 
+  /**
+   * list entity to list view.
+   *
+   * @param images
+   * @return
+   */
   public static List<ImageView> toViews(List<Image> images) {
     List<ImageView> imageViews = new ArrayList<>();
     if (images != null && !images.isEmpty()) {

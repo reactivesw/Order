@@ -11,14 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by umasuo on 16/11/30.
+ * money entity.
  */
 @Entity
 @Table(name = "money")
 public class MoneyValue {
 
   /**
-   * Id
+   * Id.
    */
   @Id
   @GeneratedValue(generator = "uuid")
@@ -40,7 +40,7 @@ public class MoneyValue {
    * default constructor.
    */
   public MoneyValue() {
-
+    //empty.
   }
 
   /**
