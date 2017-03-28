@@ -48,17 +48,21 @@ public class OrderRestClient {
   public CartView getCart(String cartId) {
     LOG.debug("enter. cartId: {}.", cartId);
 
-    String url = cartUri + cartId;
     CartView result = null;
     try {
+
+      String url = cartUri + cartId;
       result = restTemplate.getForObject(url, CartView.class);
+
+
     } catch (HttpClientErrorException ex) {
       if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
         LOG.debug("Get Cart failed. cartId: {}.", cartId, ex);
         throw new NotExistException("Cart not exist. cartId: " + cartId);
+      } else {
+        throw ex;
       }
     }
-
     LOG.debug("exit. cart: {}.", result);
     return result;
   }
@@ -71,10 +75,23 @@ public class OrderRestClient {
    */
   public ProductView getProduct(String productId, Integer variantId) {
     LOG.debug("enter: productId: {}", productId);
+    ProductView product = null;
 
-    String url = productUri + "CartProducts/" + productId + "?variantId=" +
-        variantId;
-    ProductView product = restTemplate.getForObject(url, ProductView.class);
+    try {
+
+      String url = productUri + "CartProducts/" + productId + "?variantId=" +
+          variantId;
+      product = restTemplate.getForObject(url, ProductView.class);
+
+
+    } catch (HttpClientErrorException ex) {
+      if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+        LOG.debug("Get Product failed. productId: {}, variantId: {}.", productId, variantId, ex);
+        throw new NotExistException("Product not exist. productId: " + productId);
+      } else {
+        throw ex;
+      }
+    }
 
     LOG.debug("exit: product: {}", product);
     return product;
