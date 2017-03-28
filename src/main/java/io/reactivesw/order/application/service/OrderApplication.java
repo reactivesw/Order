@@ -1,6 +1,5 @@
 package io.reactivesw.order.application.service;
 
-import io.reactivesw.exception.NotExistException;
 import io.reactivesw.order.application.model.CartView;
 import io.reactivesw.order.application.model.OrderView;
 import io.reactivesw.order.application.model.mapper.OrderMapper;
@@ -12,11 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
+/**
+ * order application.
+ */
 @Service
 public class OrderApplication {
+
   /**
    * log.
    */
@@ -26,13 +30,13 @@ public class OrderApplication {
    * The Rest client.
    */
   @Autowired
-  private OrderRestClient restClient;
+  private transient OrderRestClient restClient;
 
   /**
    * The Order service.
    */
   @Autowired
-  private OrderService orderService;
+  private transient OrderService orderService;
 
   /**
    * create order from cart Id.
@@ -45,13 +49,13 @@ public class OrderApplication {
 
     try {
       CartView cart = restClient.getCart(cartId);
-      Order order = OrderMapper.of(cart);
+      Order order = OrderMapper.build(cart);
       //TODO 检查库存
       Order result = orderService.createWithSample(order);
 
       LOG.debug("enter: order: {}", result);
       return OrderMapper.toView(result);
-    } catch (Exception ex) {
+    } catch (HttpClientErrorException ex) {
       throw new CheckoutFailedException("Checkout failed! " + ex.getMessage());
     }
   }

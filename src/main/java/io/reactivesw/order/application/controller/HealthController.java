@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Health check controller.
+ */
 @RestController
 public class HealthController {
 
@@ -13,7 +16,7 @@ public class HealthController {
    * service name.
    */
   @Value("${spring.application.name}")
-  private String serviceName;
+  private transient String serviceName;
 
   /**
    * this api is used for health check.

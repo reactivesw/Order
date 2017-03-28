@@ -26,6 +26,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+/**
+ * order entity.
+ */
 @Entity
 @Table(name = "orders")
 @Data
@@ -76,7 +79,7 @@ public class Order {
   private String customerId;
 
   /**
-   * List of line items, snapshot.
+   * List build line items, snapshot.
    */
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<LineItem> lineItems;

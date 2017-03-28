@@ -8,9 +8,12 @@ import io.reactivesw.order.infrastructure.enums.OrderState;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * order mapper
+ */
 public final class OrderMapper {
   /**
-   * Instantiates a new Order mapper.
+   * private default constructor.
    */
   private OrderMapper() {
   }
@@ -22,7 +25,7 @@ public final class OrderMapper {
    * @param cart the cart
    * @return the order entity
    */
-  public static Order of(CartView cart) {
+  public static Order build(CartView cart) {
     Order entity = new Order();
 
     entity.setCustomerId(cart.getCustomerId());
@@ -56,7 +59,7 @@ public final class OrderMapper {
   }
 
   /**
-   * convert list of order to view.
+   * convert list build order to view.
    *
    * @param orders
    * @return

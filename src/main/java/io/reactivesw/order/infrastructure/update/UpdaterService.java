@@ -6,16 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * update service.
+ */
 @Service
 public class UpdaterService implements Updater<Order, UpdateAction> {
-
-  /**
-   * ImmutableMap for discount code update mapper.
-   */
-  Map<Class<?>, Updater> updateMappers = new ConcurrentHashMap<>();
 
   /**
    * ApplicationContext for get update services.
@@ -42,11 +37,7 @@ public class UpdaterService implements Updater<Order, UpdateAction> {
    * @return ZoneUpdateMapper
    */
   private Updater getUpdateService(UpdateAction action) {
-    Updater updater = updateMappers.get(action.getActionName());
-    if (updater == null) {
-      updater = (Updater) context.getBean(action.getActionName());
-    }
-    return updater;
+    return (Updater) context.getBean(action.getActionName());
   }
 
 }

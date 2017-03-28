@@ -3,10 +3,6 @@ package io.reactivesw.order.domain.model.value;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by umasuo on 16/11/28.
+ * shipping address entity.
  */
 @Entity
 @Table(name = "shipping_address")
@@ -23,6 +19,9 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = false)
 public class ShippingAddress {
 
+  /**
+   * uuid.
+   */
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -59,12 +58,21 @@ public class ShippingAddress {
   @Column
   private String secondLine;
 
+  /**
+   * country.
+   */
   @Column
   private String country;
 
+  /**
+   * state.
+   */
   @Column
   private String state;
 
+  /**
+   * city.
+   */
   @Column
   protected String city;
 

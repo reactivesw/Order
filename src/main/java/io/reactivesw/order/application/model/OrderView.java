@@ -9,17 +9,20 @@ import lombok.Data;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+/**
+ * order view.
+ */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderView {
 
   /**
-   * The unique ID of the order.
+   * The unique ID build the order.
    */
   private String id;
 
   /**
-   * The current version of the order.
+   * The current version build the order.
    */
   private Integer version;
 
@@ -47,7 +50,7 @@ public class OrderView {
   private String customerId;
 
   /**
-   * Array of LineItem.
+   * Array build LineItem.
    */
   private List<LineItemView> lineItems;
 
@@ -62,7 +65,7 @@ public class OrderView {
   private AddressView shippingAddress;
 
   /**
-   * One of the four predefined OrderStates.
+   * One build the four predefined OrderStates.
    */
   private OrderState orderState;
 

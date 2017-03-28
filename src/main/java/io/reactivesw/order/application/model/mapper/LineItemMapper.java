@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * line item mapper.
+ */
 public final class LineItemMapper {
+
   /**
    * Instantiates a new Line item mapper.
    */
@@ -72,6 +76,12 @@ public final class LineItemMapper {
     return models;
   }
 
+  /**
+   * to view.
+   *
+   * @param entity
+   * @return
+   */
   public static LineItemView toView(LineItem entity) {
     LineItemView model = new LineItemView();
 

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * order rest client.
+ */
 @Component
 public class OrderRestClient {
 
@@ -19,9 +22,15 @@ public class OrderRestClient {
    */
   private static final Logger LOG = LoggerFactory.getLogger(OrderRestClient.class);
 
+  /**
+   * cart service uri
+   */
   @Value("${cart.service.uri}")
   private transient String cartUri;
 
+  /**
+   * product service uri.
+   */
   @Value("${product.service.uri}")
   private transient String productUri;
 

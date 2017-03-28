@@ -1,8 +1,6 @@
 package io.reactivesw.order.infrastructure.update;
 
 
-import lombok.Data;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +8,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-@Data
+/**
+ * update request.
+ */
 public class UpdateRequest {
   /**
    * The expected version of the category on which the changes should be applied.
@@ -18,7 +18,7 @@ public class UpdateRequest {
    */
   @NotNull
   @Min(0)
-  Integer version;
+  private Integer version;
 
   /**
    * Array of UpdateAction.
@@ -27,7 +27,7 @@ public class UpdateRequest {
    */
   @NotNull
   @Valid
-  List<UpdateAction> actions;
+  private List<UpdateAction> actions;
 
   /**
    * convert to UpdateActions.
@@ -35,6 +35,34 @@ public class UpdateRequest {
    * @return list of UpdateAction
    */
   public List<UpdateAction> getActions() {
-    return actions.parallelStream().map(a -> (UpdateAction) a).collect(Collectors.toList());
+    return actions.parallelStream().map(action -> (UpdateAction) action).collect(Collectors
+        .toList());
+  }
+
+  /**
+   * set actions.
+   *
+   * @param actions
+   */
+  public void setActions(List<UpdateAction> actions) {
+    this.actions = actions;
+  }
+
+  /**
+   * get version.
+   *
+   * @return
+   */
+  public Integer getVersion() {
+    return version;
+  }
+
+  /**
+   * set version.
+   *
+   * @param version
+   */
+  public void setVersion(Integer version) {
+    this.version = version;
   }
 }

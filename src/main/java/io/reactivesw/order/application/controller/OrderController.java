@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
+/**
+ * order controller, provider create, get, update, delete apis.
+ */
 @RestController
 @CrossOrigin
 public class OrderController {
@@ -54,7 +56,7 @@ public class OrderController {
 
     OrderView orderView = orderApplication.checkout(cartId);
 
-    LOG.info("exit. order: {}.", orderView);
+    LOG.info("exit. order: {}, cartId: {}.", orderView, cartId);
     return orderView;
   }
 
@@ -70,17 +72,23 @@ public class OrderController {
 
     Order result = orderService.getById(orderId);
 
-    LOG.info("exit. order: {}.", result);
+    LOG.info("exit. order: {}, orderId: {}.", result, orderId);
     return OrderMapper.toView(result);
   }
 
+  /**
+   * get orders by customerId.
+   *
+   * @param customerId
+   * @return
+   */
   @GetMapping(Router.ORDER_ROOT)
   public List<OrderView> getOrdersByCustomerId(@RequestParam String customerId) {
     LOG.info("enter. order: {}.", customerId);
 
     List<Order> orders = orderService.getByCustomerId(customerId);
 
-    LOG.info("exit. order: {}.", orders);
+    LOG.info("exit. order: {}, customerId: {}.", orders, customerId);
     return OrderMapper.toView(orders);
   }
 
@@ -92,13 +100,13 @@ public class OrderController {
    */
   @PutMapping(Router.ORDER_WITH_ID)
   public OrderView updateOrder(@PathVariable(Router.ORDER_ID) String orderId,
-                              @RequestBody UpdateRequest updateRequest) {
+                               @RequestBody UpdateRequest updateRequest) {
     LOG.info("enter. id: {}, updateRequest: {}.", orderId, updateRequest);
 
     OrderView order = orderApplication.updateOrder(orderId, updateRequest.getVersion(),
         updateRequest.getActions());
 
-    LOG.info("exit. order: {}.", order);
+    LOG.info("exit. order: {}, orderId: {}, updateRequest: {}.", order, orderId, updateRequest);
     return order;
   }
 
