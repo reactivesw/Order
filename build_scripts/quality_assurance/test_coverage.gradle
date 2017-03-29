@@ -16,6 +16,7 @@ dependencies {
     //spock spring
     testCompile('org.spockframework:spock-spring:1.0-groovy-2.4')
 
+    // for mock non interface
     testCompile('cglib:cglib-nodep:3.2.5')
 }
 

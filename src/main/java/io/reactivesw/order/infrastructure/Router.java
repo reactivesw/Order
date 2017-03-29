@@ -29,4 +29,9 @@ public final class Router {
    * The constant order_health_check.
    */
   public static final String HEALTH_CHECK = ORDER_ROOT + "health";
+
+  /**
+   * checkout from cart.
+   */
+  public static final String CHECKOUT = ORDER_ROOT + "checkout";
 }

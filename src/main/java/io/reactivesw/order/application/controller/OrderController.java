@@ -50,7 +50,7 @@ public class OrderController {
    *
    * @return OrderView
    */
-  @PostMapping(Router.ORDER_ROOT)
+  @PostMapping(Router.CHECKOUT)
   public OrderView checkout(@RequestParam String cartId) {
     LOG.info("enter. cartId: {}.", cartId);
 

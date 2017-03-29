@@ -75,6 +75,13 @@ Order service.
 - Payload: orderId --NotNull
 - Response: NONE
 
+## 3.4 checkout
+- Path: /checkout
+- Method: POST
+- Payload: cartId --NotNull
+- Response: order
+- Sample: {RootUrl}?cartId=ERTAYDASD-ADAVFCA-SADSDASDA-SCAS
+
 # 4 Actions
 Actions for update cart
 ## 4.1 AddLineItem
