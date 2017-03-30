@@ -25,13 +25,13 @@ public class OrderRestClient {
   /**
    * cart service uri
    */
-  @Value("${cart.service.uri:http://carts/}")
+  @Value("${cart.service.uri:http://cart/}")
   private transient String cartUri;
 
   /**
    * product service uri.
    */
-  @Value("${product.service.uri:http://products/}")
+  @Value("${product.service.uri:http://product/}")
   private transient String productUri;
 
   /**
