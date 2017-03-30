@@ -25,6 +25,10 @@ items:
             value: jdbc:postgresql://pg-data/orders
           - name: spring_cloud_config_uri
             value: http://reactivesw-config
+          - name: cart_service_uri
+            value: http://carts/
+          - name: product_service_uri
+            value: http://products/
           - name: jwt_secret
             valueFrom:
               secretKeyRef:

@@ -25,13 +25,13 @@ public class OrderRestClient {
   /**
    * cart service uri
    */
-  @Value("${cart.service.uri}")
+  @Value("${cart.service.uri:http://carts/}")
   private transient String cartUri;
 
   /**
    * product service uri.
    */
-  @Value("${product.service.uri}")
+  @Value("${product.service.uri:http://products/}")
   private transient String productUri;
 
   /**
@@ -52,8 +52,9 @@ public class OrderRestClient {
     try {
 
       String url = cartUri + cartId;
-      result = restTemplate.getForObject(url, CartView.class);
+      LOG.debug("Get Cart from cart service. url: {}.", url);
 
+      result = restTemplate.getForObject(url, CartView.class);
 
     } catch (HttpClientErrorException ex) {
       if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
