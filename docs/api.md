@@ -56,7 +56,7 @@ Order service.
 - Payload: orderId -- NotNull
 - Response: OrderView
 
-## 3.2 get order by customerId
+## 3.2 get order list by customerId
 - Path: /
 - Method: GET
 - Payload: customerId -- NotNull
@@ -83,7 +83,7 @@ Order service.
 - Sample: {RootUrl}?cartId=ERTAYDASD-ADAVFCA-SADSDASDA-SCAS
 
 # 4 Actions
-Actions for update cart
+Actions for update order
 ## 4.1 AddLineItem
 ```Java
 
