@@ -53,7 +53,7 @@ public class OrderRestClient {
 
       //checkout the cart. todo prevent checkout success bug create order failed.
       String url = cartUri + cartId + "/checkout";
-      LOG.debug("Get Cart from cart service. url: {}.", url);
+      LOG.debug("CartUrl: {}.", url);
 
       result = restTemplate.getForObject(url, CartView.class);
 
