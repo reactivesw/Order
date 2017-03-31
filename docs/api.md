@@ -82,6 +82,12 @@ Order service.
 - Response: order
 - Sample: {RootUrl}?cartId=ERTAYDASD-ADAVFCA-SADSDASDA-SCAS
 
+## 3.4 place order
+- Path: /{orderId}/place
+- Method: POST
+- Payload: orderId --NotNull in path
+- Response: order with status updated
+
 # 4 Actions
 Actions for update order
 ## 4.1 AddLineItem
