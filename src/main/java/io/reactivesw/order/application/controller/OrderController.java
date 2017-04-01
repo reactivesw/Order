@@ -1,6 +1,7 @@
 package io.reactivesw.order.application.controller;
 
 import io.reactivesw.order.application.model.OrderView;
+import io.reactivesw.order.application.model.PlaceOrderRequest;
 import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.application.service.OrderApplication;
 import io.reactivesw.order.domain.model.Order;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import javax.validation.Valid;
 
 /**
  * order controller, provider create, get, update, delete apis.
@@ -50,13 +53,15 @@ public class OrderController {
    *
    * @return OrderView
    */
-  @PostMapping(Router.CHECKOUT)
-  public OrderView checkout(@RequestParam String cartId) {
-    LOG.info("enter. cartId: {}.", cartId);
+  @PostMapping(Router.ORDER_ROOT)
+  public OrderView placeOrder(@RequestBody @Valid PlaceOrderRequest request) {
+    LOG.info("enter. PlaceOrderRequest: {}", request);
 
-    OrderView orderView = orderApplication.checkout(cartId);
+    //todo check if the customer is the id in token.
+    OrderView orderView = orderApplication.place(request.getCartId(), request.getAddressId(),
+        request.getCreditCardId());
 
-    LOG.info("exit. order: {}, cartId: {}.", orderView, cartId);
+    LOG.info("exit. order: {}.", orderView);
     return orderView;
   }
 

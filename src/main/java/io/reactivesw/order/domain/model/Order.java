@@ -109,4 +109,10 @@ public class Order {
   @Column
   private OrderState orderState;
 
+  /**
+   * payment id will be set when the order been placed.
+   */
+  @Column
+  private String paymentId;
+
 }

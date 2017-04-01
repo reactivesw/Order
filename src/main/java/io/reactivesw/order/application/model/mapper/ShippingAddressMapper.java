@@ -24,7 +24,7 @@ public final class ShippingAddressMapper {
     ShippingAddress address = new ShippingAddress();
 
     if (view != null) {
-      address.setId(view.getId());
+//      address.setId(view.getId());
 
       address.setFullName(view.getFullName());
 

@@ -3,6 +3,8 @@ package io.reactivesw.order.domain.service;
 import io.reactivesw.exception.ConflictException;
 import io.reactivesw.exception.NotExistException;
 import io.reactivesw.order.domain.model.Order;
+import io.reactivesw.order.domain.model.value.LineItem;
+import io.reactivesw.order.domain.model.value.MoneyValue;
 import io.reactivesw.order.infrastructure.repository.OrderRepository;
 import io.reactivesw.order.infrastructure.update.UpdateAction;
 import io.reactivesw.order.infrastructure.update.UpdaterService;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Davis on 17/2/6.
+ * order service.
  */
 @Service
 public class OrderService {
@@ -36,12 +38,18 @@ public class OrderService {
   private transient UpdaterService orderUpdater;
 
   /**
+   * order LineItem service.
+   */
+  @Autowired
+  private transient LineItemService lineItemService;
+
+  /**
    * Save order.
    *
    * @param order sample
    * @return the order view
    */
-  public Order createWithSample(Order order) {
+  public Order save(Order order) {
     LOG.debug("enter: order: {},", order);
 
     Order savedOrder = orderRepository.save(order);
@@ -104,6 +112,9 @@ public class OrderService {
     actions.stream().forEach(
         action -> orderUpdater.handle(order, action)
     );
+
+    //recalculate the order.
+    calculateCartPrice(order);
     return this.orderRepository.save(order);
   }
 
@@ -132,5 +143,37 @@ public class OrderService {
           inputVersion, curVersion);
       throw new ConflictException("Order Version Not Match");
     }
+  }
+
+  /**
+   * calculate order total price.
+   *
+   * @param order Order
+   */
+  public void calculateCartPrice(Order order) {
+    LOG.debug("enter. order before calculate: {}", order);
+    List<LineItem> items = order.getLineItems();
+    int lineItemTotalPrice = 0;
+    MoneyValue orderTotal = new MoneyValue();
+    if (items != null) {
+
+      items.stream().forEach(
+          lineItem -> {
+            lineItemService.calculateItemPrice(lineItem);
+            orderTotal.setCurrencyCode(lineItem.getPrice().getCurrencyCode());
+          }
+      );
+      //count total price of all line item
+      lineItemTotalPrice = items.stream().mapToInt(
+          lineItem -> lineItem.getTotalPrice().getCentAmount()
+      ).sum();
+    }
+
+    int cartTotalPrice = lineItemTotalPrice;
+
+    // TODO get the currency from the merchant.
+    orderTotal.setCentAmount(cartTotalPrice);
+    order.setTotalPrice(orderTotal);
+    LOG.debug("exit: order after calculate: {}", order);
   }
 }

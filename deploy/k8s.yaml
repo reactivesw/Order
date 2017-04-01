@@ -27,8 +27,14 @@ items:
             value: http://reactivesw-config
           - name: cart_service_uri
             value: http://cart/
+          - name: customer_service_uri
+            value: http://customer-info/
+          - name: inventory_service_uri
+            value: http://inventory/
           - name: product_service_uri
             value: http://product/
+          - name: payment_service_uri
+            value: http://payment/
           - name: jwt_secret
             valueFrom:
               secretKeyRef:

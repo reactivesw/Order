@@ -13,7 +13,7 @@ public enum OrderState {
   /**
    * Confirmed order state.
    */
-  Confirmed,
+  Reserved,
   /**
    * payed.
    */

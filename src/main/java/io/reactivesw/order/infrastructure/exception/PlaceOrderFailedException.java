@@ -1,9 +1,9 @@
 package io.reactivesw.order.infrastructure.exception;
 
 /**
- * checkout failed exception.
+ * place order failed exception.
  */
-public class CheckoutFailedException extends RuntimeException {
+public class PlaceOrderFailedException extends RuntimeException {
 
   /**
    * auto generated serial version.
@@ -13,7 +13,7 @@ public class CheckoutFailedException extends RuntimeException {
   /**
    * checkout failed exception.
    */
-  public CheckoutFailedException() {
+  public PlaceOrderFailedException() {
     super();
   }
 
@@ -22,7 +22,7 @@ public class CheckoutFailedException extends RuntimeException {
    *
    * @param msg
    */
-  public CheckoutFailedException(String msg) {
+  public PlaceOrderFailedException(String msg) {
     super(msg);
   }
 
@@ -32,7 +32,7 @@ public class CheckoutFailedException extends RuntimeException {
    * @param msg
    * @param source
    */
-  public CheckoutFailedException(String msg, Throwable source) {
+  public PlaceOrderFailedException(String msg, Throwable source) {
     super(msg, source);
   }
 
