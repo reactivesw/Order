@@ -3,7 +3,7 @@ package io.reactivesw.order.application.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.reactivesw.model.Money;
-import io.reactivesw.order.infrastructure.enums.OrderState;
+import io.reactivesw.order.infrastructure.enums.OrderStatus;
 import lombok.Data;
 
 import java.time.ZonedDateTime;
@@ -67,6 +67,6 @@ public class OrderView {
   /**
    * One build the four predefined OrderStates.
    */
-  private OrderState orderState;
+  private OrderStatus orderStatus;
 
 }

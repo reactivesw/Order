@@ -1,10 +1,9 @@
 package io.reactivesw.order.infrastructure.enums;
 
 /**
- * Created by Davis on 16/11/17.
+ * order status.
  */
-
-public enum OrderState {
+public enum OrderStatus {
 
   /**
    * Created order state.

@@ -13,7 +13,7 @@ Order service.
 | lineItems         | List<LineItemView>| |
 | totalPrice        | Money             | |
 | shippingAddress   | AddressView       | |
-| orderState        | OrderState        | |
+| orderStatus       | OrderStatus        | |
 
 ## 2.2 LineItemView 
 | field name        | field type        | comments  |
@@ -57,6 +57,34 @@ Order service.
 | creditCardId      | String            | NOT NULL|
 | cartId            | String            | NOT NULL|
 
+## 2.6 OrderStatus enum
+```java
+
+  /**
+   * Created order state.
+   */
+  Created,
+  /**
+   * Created, and reserved inventory
+   */
+  Reserved,
+  /**
+   * payed.
+   */
+  Payed,
+  /**
+   * Shipped
+   */
+  Shipped,
+  /**
+   * Complete order state.
+   */
+  Complete,
+  /**
+   * Cancelled order state.
+   */
+  Cancelled;
+```
 
 
 # 3 Api
