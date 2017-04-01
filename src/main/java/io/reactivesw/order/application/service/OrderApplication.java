@@ -54,11 +54,11 @@ public class OrderApplication {
   public OrderView place(String cartId, String addressId, String creditCardId) {
     LOG.debug("enter: cartId: {}", cartId);
 
-    //build an order with cart and address.
+    // build an order with cart and address.
     Order order = buildWithCartAndAddress(cartId, addressId);
-    //change inventory.
+    // change inventory.
     changeProductInventory(order.getLineItems());
-    //Call payment service.
+    // call payment service to pay the order.
     orderPay(order, creditCardId);
 
     orderService.save(order);
