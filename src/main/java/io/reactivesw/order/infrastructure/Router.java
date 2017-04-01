@@ -34,4 +34,9 @@ public final class Router {
    * checkout from cart.
    */
   public static final String CHECKOUT = ORDER_ROOT + "checkout";
+
+  /**
+   * place order.
+   */
+  public static final String PLACE_ORDER = ORDER_WITH_ID + "/place";
 }

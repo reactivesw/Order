@@ -1,5 +1,6 @@
 package io.reactivesw.order.application.model.mapper;
 
+import io.reactivesw.order.application.model.AddressView;
 import io.reactivesw.order.application.model.CartView;
 import io.reactivesw.order.application.model.OrderView;
 import io.reactivesw.order.domain.model.Order;
@@ -25,7 +26,7 @@ public final class OrderMapper {
    * @param cart the cart
    * @return the order entity
    */
-  public static Order build(CartView cart) {
+  public static Order build(CartView cart, AddressView address) {
     Order entity = new Order();
 
     entity.setCustomerId(cart.getCustomerId());
@@ -33,6 +34,7 @@ public final class OrderMapper {
     entity.setTotalPrice(MoneyMapper.toEntity(cart.getTotalPrice()));
     entity.setOrderState(OrderState.Created);
 
+    entity.setShippingAddress(ShippingAddressMapper.modelToEntity(address));
     return entity;
   }
 

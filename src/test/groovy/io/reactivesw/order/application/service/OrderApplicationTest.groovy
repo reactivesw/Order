@@ -1,12 +1,14 @@
 package io.reactivesw.order.application.service
 
 import io.reactivesw.model.Money
+import io.reactivesw.order.application.model.AddressView
 import io.reactivesw.order.application.model.CartView
 import io.reactivesw.order.application.model.LineItemView
+import io.reactivesw.order.application.model.PaymentView
 import io.reactivesw.order.application.model.mapper.OrderMapper
 import io.reactivesw.order.domain.model.Order
 import io.reactivesw.order.domain.service.OrderService
-import io.reactivesw.order.infrastructure.exception.CheckoutFailedException
+import io.reactivesw.order.infrastructure.exception.PlaceOrderFailedException
 import io.reactivesw.order.infrastructure.update.UpdateAction
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
@@ -27,6 +29,9 @@ class OrderApplicationTest extends Specification {
 
     LineItemView lineItemView
 
+    AddressView addressView = new AddressView(id: "addressId")
+
+    PaymentView paymentView = new PaymentView(id: "paymentView")
     Order order;
 
     def setup() {
@@ -35,17 +40,20 @@ class OrderApplicationTest extends Specification {
         lineItemViewList.add(lineItemView)
         cartView = new CartView(id: "cartId", customerId: "customerId", lineItems: lineItemViewList, totalPrice: new Money("USD", 100), country: "USA", currencyCode: "USD")
 
-        order = OrderMapper.build(cartView)
+        order = OrderMapper.build(cartView, addressView)
         order.setId("orderId")
 
         application = new OrderApplication(restClient: restClient, orderService: orderService)
     }
 
-    def "Test 1.1: Checkout correct."() {
+    def "Test 1.1: Place order correct."() {
         when:
         restClient.getCart(_) >> cartView
-        orderService.createWithSample(_) >> order
-        application.checkout("cartId")
+        restClient.getAddress(_) >> addressView
+        restClient.changeProductInventory(_) >> null
+        restClient.pay(_) >> paymentView
+        orderService.save(_) >> order
+        application.place("cartId", "addressId", "creditCardId")
         then:
         noExceptionThrown()
     }
@@ -53,9 +61,9 @@ class OrderApplicationTest extends Specification {
     def "Test 1.2: Checkout with cart not exits."() {
         when:
         restClient.getCart(_) >> { throw new HttpClientErrorException(HttpStatus.NOT_FOUND) }
-        application.checkout("cartId")
+        application.place("cartId", "addressId", "creditCardId")
         then:
-        thrown(CheckoutFailedException)
+        thrown(PlaceOrderFailedException)
     }
 
     def "Test 2.1 update order with actions"() {
