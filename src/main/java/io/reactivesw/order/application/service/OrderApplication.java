@@ -49,7 +49,7 @@ public class OrderApplication {
   /**
    * place an existing order. the order should be completed.
    *
-   * @return
+   * @return Order view
    */
   public OrderView place(String cartId, String addressId, String creditCardId) {
     LOG.debug("enter: cartId: {}", cartId);

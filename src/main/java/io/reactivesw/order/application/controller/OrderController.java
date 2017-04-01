@@ -55,7 +55,7 @@ public class OrderController {
    */
   @PostMapping(Router.ORDER_ROOT)
   public OrderView placeOrder(@RequestBody @Valid PlaceOrderRequest request) {
-    LOG.info("enter. orderId: {}, PlaceOrderRequest: {}", request);
+    LOG.info("enter. PlaceOrderRequest: {}", request);
 
     //todo check if the customer is the id in token.
     OrderView orderView = orderApplication.place(request.getCartId(), request.getAddressId(),
