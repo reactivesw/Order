@@ -12,6 +12,7 @@ import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.model.value.LineItem;
 import io.reactivesw.order.domain.service.OrderService;
+import io.reactivesw.order.infrastructure.enums.OrderState;
 import io.reactivesw.order.infrastructure.exception.PlaceOrderFailedException;
 import io.reactivesw.order.infrastructure.update.UpdateAction;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +57,9 @@ public class OrderApplication {
     LOG.debug("enter: cartId: {}", cartId);
 
     // build an order with cart and address.
-    Order order = buildWithCartAndAddress(cartId, addressId);
+    Order order = buildOrder(cartId, addressId);
     // change inventory.
-    changeProductInventory(order.getLineItems());
+    changeInventory(order);
     // call payment service to pay the order.
     orderPay(order, creditCardId);
 
@@ -84,32 +86,35 @@ public class OrderApplication {
   }
 
   /**
-   * build an order.
+   * build an order with cart and address.
    *
    * @param cartId    String
    * @param addressId String
    * @return Order
    */
-  private Order buildWithCartAndAddress(String cartId, String addressId) {
-    Order order = null;
+  private Order buildOrder(String cartId, String addressId) {
+
     try {
       CartView cart = restClient.getCart(cartId);
       AddressView address = restClient.getAddress(addressId);
-      order = OrderMapper.build(cart, address);
+      Order order = OrderMapper.build(cart, address);
       orderService.calculateCartPrice(order);
+      order.setOrderState(OrderState.Created);
+
+      // create the order.
+      return orderService.save(order);
     } catch (HttpClientErrorException | NotExistException ex) {
       throw new PlaceOrderFailedException("Place order failed for build order failed.");
     }
-
-    return order;
   }
 
   /**
    * change product inventory.
    *
-   * @param items line items
+   * @param order Order
    */
-  private void changeProductInventory(List<LineItem> items) {
+  private void changeInventory(Order order) {
+    List<LineItem> items = order.getLineItems();
     try {
       List<InventoryRequest> inventoryRequests = new ArrayList<>();
       items.stream().forEach(
@@ -121,6 +126,7 @@ public class OrderApplication {
           }
       );
       restClient.changeProductInventory(inventoryRequests);
+      order.setOrderState(OrderState.Reserved);
     } catch (HttpClientErrorException | NotExistException ex) {
       throw new PlaceOrderFailedException("Place order failed for reduce inventory failed.");
     }
@@ -135,14 +141,15 @@ public class OrderApplication {
    */
   private void orderPay(Order order, String creditCartId) {
     try {
-
       PayRequest request = new PayRequest();
       request.setCustomerId(order.getCustomerId());
       request.setCreditCardId(creditCartId);
       request.setAmount(MoneyMapper.toView(order.getTotalPrice()));
       PaymentView paymentView = restClient.pay(request);
+
       order.setPaymentId(paymentView.getId());
-    } catch (HttpClientErrorException | NotExistException ex) {
+      order.setOrderState(OrderState.Payed);
+    } catch (HttpClientErrorException | NotExistException | HttpServerErrorException ex) {
       throw new PlaceOrderFailedException("Place order failed for reduce pay failed.");
     }
   }

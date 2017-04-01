@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class OrderRestClient {
     CartView result = null;
     try {
 
-      //checkout the cart. todo prevent checkout success bug create order failed.
+      //checkout the cart.
       String url = cartUri + cartId + "/checkout";
       LOG.debug("CartUrl: {}.", url);
 
@@ -190,7 +191,7 @@ public class OrderRestClient {
       String url = paymentUri;
       payment = restTemplate.postForObject(url, request, PaymentView.class);
 
-    } catch (HttpClientErrorException ex) {
+    } catch (HttpClientErrorException | HttpServerErrorException ex) {
       LOG.debug("pay order failed: {}", ex.getMessage());
       throw ex;
     }
