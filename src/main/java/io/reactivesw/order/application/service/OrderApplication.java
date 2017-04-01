@@ -11,7 +11,7 @@ import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.model.value.LineItem;
 import io.reactivesw.order.domain.service.OrderService;
-import io.reactivesw.order.infrastructure.enums.OrderState;
+import io.reactivesw.order.infrastructure.enums.OrderStatus;
 import io.reactivesw.order.infrastructure.exception.BuildOrderException;
 import io.reactivesw.order.infrastructure.exception.CheckoutCartException;
 import io.reactivesw.order.infrastructure.exception.GetAddressException;
@@ -98,7 +98,7 @@ public class OrderApplication {
       AddressView address = restClient.getAddress(addressId);
       Order order = OrderMapper.build(cart, address);
       orderService.calculateCartPrice(order);
-      order.setOrderState(OrderState.Created);
+      order.setOrderStatus(OrderStatus.Created);
 
       // create the order.
       return orderService.save(order);
@@ -124,7 +124,7 @@ public class OrderApplication {
         }
     );
     restClient.changeProductInventory(inventoryRequests);
-    order.setOrderState(OrderState.Reserved);
+    order.setOrderStatus(OrderStatus.Reserved);
   }
 
   /**
@@ -142,6 +142,6 @@ public class OrderApplication {
     PaymentView paymentView = restClient.pay(request);
 
     order.setPaymentId(paymentView.getId());
-    order.setOrderState(OrderState.Payed);
+    order.setOrderStatus(OrderStatus.Payed);
   }
 }

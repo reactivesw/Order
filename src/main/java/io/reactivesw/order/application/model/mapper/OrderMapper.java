@@ -4,7 +4,7 @@ import io.reactivesw.order.application.model.AddressView;
 import io.reactivesw.order.application.model.CartView;
 import io.reactivesw.order.application.model.OrderView;
 import io.reactivesw.order.domain.model.Order;
-import io.reactivesw.order.infrastructure.enums.OrderState;
+import io.reactivesw.order.infrastructure.enums.OrderStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public final class OrderMapper {
     entity.setCustomerId(cart.getCustomerId());
     entity.setLineItems(LineItemMapper.toEntity(cart.getLineItems()));
     entity.setTotalPrice(MoneyMapper.toEntity(cart.getTotalPrice()));
-    entity.setOrderState(OrderState.Created);
+    entity.setOrderStatus(OrderStatus.Created);
 
     entity.setShippingAddress(ShippingAddressMapper.modelToEntity(address));
     return entity;
@@ -55,7 +55,7 @@ public final class OrderMapper {
     model.setCustomerId(entity.getCustomerId());
     model.setLineItems(LineItemMapper.toViews(entity.getLineItems()));
     model.setTotalPrice(MoneyMapper.toView(entity.getTotalPrice()));
-    model.setOrderState(entity.getOrderState());
+    model.setOrderStatus(entity.getOrderStatus());
 
     return model;
   }

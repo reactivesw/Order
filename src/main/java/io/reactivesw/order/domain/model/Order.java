@@ -3,7 +3,7 @@ package io.reactivesw.order.domain.model;
 import io.reactivesw.order.domain.model.value.LineItem;
 import io.reactivesw.order.domain.model.value.MoneyValue;
 import io.reactivesw.order.domain.model.value.ShippingAddress;
-import io.reactivesw.order.infrastructure.enums.OrderState;
+import io.reactivesw.order.infrastructure.enums.OrderStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -107,7 +107,7 @@ public class Order {
    * order state.
    */
   @Column
-  private OrderState orderState;
+  private OrderStatus orderStatus;
 
   /**
    * payment id will be set when the order been placed.
