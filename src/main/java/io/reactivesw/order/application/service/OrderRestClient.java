@@ -137,7 +137,7 @@ public class OrderRestClient {
       String url = inventoryUri;
       LOG.debug("InventoryUrl: {}.", url);
 
-      restTemplate.put(url, List.class);
+      restTemplate.put(url,requestList);
 
     } catch (HttpClientErrorException ex) {
       LOG.debug("change product inventory failed: {}", ex.getMessage());

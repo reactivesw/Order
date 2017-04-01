@@ -47,7 +47,7 @@ public class OrderApplication {
   private transient OrderService orderService;
 
   /**
-   * place an existing order. the order should be completed.
+   * place an order.
    *
    * @return Order view
    */
