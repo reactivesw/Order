@@ -54,6 +54,7 @@ Order service.
 |----|----|----|
 | customerId        | String            | NOT NULL|
 | addressId         | String            | NOT NULL|
+| creditCardId      | String            | NOT NULL|
 | cartId            | String            | NOT NULL|
 
 
