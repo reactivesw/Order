@@ -49,6 +49,15 @@ Order service.
 | state             | String            | |
 | city              | String            | |
 
+## 2.5 PlaceOrderRequest
+| field name        | field type        | comments |
+|----|----|----|
+| customerId        | String            | NOT NULL|
+| addressId         | String            | NOT NULL|
+| cartId            | String            | NOT NULL|
+
+
+
 # 3 Api
 ## 3.1 get order by orderId
 - Path: /{orderId}
@@ -75,18 +84,13 @@ Order service.
 - Payload: orderId --NotNull
 - Response: NONE
 
-## 3.4 checkout
-- Path: /checkout
+## 3.4 Place order
+when the order been placed, then the customer can not change it anymore.
+- Path: /
 - Method: POST
-- Payload: cartId --NotNull
+- Payload: PlaceOrderRequest
 - Response: order
-- Sample: {RootUrl}?cartId=ERTAYDASD-ADAVFCA-SADSDASDA-SCAS
 
-## 3.4 place order
-- Path: /{orderId}/place
-- Method: POST
-- Payload: orderId --NotNull in path
-- Response: order with status updated
 
 # 4 Actions
 Actions for update order
