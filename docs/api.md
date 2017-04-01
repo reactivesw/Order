@@ -122,7 +122,7 @@ when the order been placed, then the customer can not change it anymore.
 - Exceptions
 
 | Exception         | means        | http code | customized code|
-|----|----|----|
+|----|----|----|----|
 | BuildOrderException | build order failed. | 500| 60001
 | ChangeInventoryException | build order failed. | 500| 60002
 | PayOrderException | build order failed. | 500| 60003
