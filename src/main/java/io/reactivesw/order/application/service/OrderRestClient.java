@@ -1,16 +1,19 @@
 package io.reactivesw.order.application.service;
 
-import io.reactivesw.exception.NotExistException;
 import io.reactivesw.order.application.model.AddressView;
 import io.reactivesw.order.application.model.CartView;
 import io.reactivesw.order.application.model.InventoryRequest;
 import io.reactivesw.order.application.model.PayRequest;
 import io.reactivesw.order.application.model.PaymentView;
 import io.reactivesw.order.application.model.ProductView;
+import io.reactivesw.order.infrastructure.exception.ReserveInventoryException;
+import io.reactivesw.order.infrastructure.exception.CheckoutCartException;
+import io.reactivesw.order.infrastructure.exception.GetAddressException;
+import io.reactivesw.order.infrastructure.exception.GetProductException;
+import io.reactivesw.order.infrastructure.exception.PayOrderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -82,13 +85,9 @@ public class OrderRestClient {
 
       result = restTemplate.getForObject(url, CartView.class);
 
-    } catch (HttpClientErrorException ex) {
-      if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-        LOG.debug("Get Cart failed. cartId: {}.", cartId, ex);
-        throw new NotExistException("Cart not exist. cartId: " + cartId);
-      } else {
-        throw ex;
-      }
+    } catch (HttpClientErrorException | HttpServerErrorException ex) {
+      LOG.debug("Checkout Cart failed. cartId: {}.", cartId, ex);
+      throw new CheckoutCartException("Checkout cart failed. cartId: " + cartId);
     }
     LOG.debug("exit. cart: {}.", result);
     return result;
@@ -112,13 +111,9 @@ public class OrderRestClient {
 
       result = restTemplate.getForObject(url, AddressView.class);
 
-    } catch (HttpClientErrorException ex) {
-      if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-        LOG.debug("Get Address failed. addressId: {}.", addressId, ex);
-        throw new NotExistException("Cart not exist. addressId: " + addressId);
-      } else {
-        throw ex;
-      }
+    } catch (HttpClientErrorException | HttpServerErrorException ex) {
+      LOG.debug("Get Address failed. addressId: {}.", addressId, ex);
+      throw new GetAddressException("Get Address failed. addressId: " + addressId);
     }
     LOG.debug("exit. address: {}.", result);
     return result;
@@ -138,11 +133,11 @@ public class OrderRestClient {
       String url = inventoryUri;
       LOG.debug("InventoryUrl: {}.", url);
 
-      restTemplate.put(url,requestList);
+      restTemplate.put(url, requestList);
 
-    } catch (HttpClientErrorException ex) {
-      LOG.debug("change product inventory failed: {}", ex.getMessage());
-      throw ex;
+    } catch (HttpClientErrorException | HttpServerErrorException ex) {
+      LOG.debug("change inventory failed: {}", ex.getMessage());
+      throw new ReserveInventoryException("change inventory failed.");
     }
     LOG.debug("exit.");
   }
@@ -163,13 +158,9 @@ public class OrderRestClient {
           variantId;
       product = restTemplate.getForObject(url, ProductView.class);
 
-    } catch (HttpClientErrorException ex) {
-      if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-        LOG.debug("Get Product failed. productId: {}, variantId: {}.", productId, variantId, ex);
-        throw new NotExistException("Product not exist. productId: " + productId);
-      } else {
-        throw ex;
-      }
+    } catch (HttpClientErrorException | HttpServerErrorException ex) {
+      LOG.debug("Get Product failed. productId: {}, variantId: {}.", productId, variantId, ex);
+      throw new GetProductException("Get Product failed. productId: " + productId);
     }
 
     LOG.debug("exit: product: {}", product);
@@ -193,7 +184,7 @@ public class OrderRestClient {
 
     } catch (HttpClientErrorException | HttpServerErrorException ex) {
       LOG.debug("pay order failed: {}", ex.getMessage());
-      throw ex;
+      throw new PayOrderException("Pay order failed.");
     }
 
     LOG.debug("exit: payment: {}", payment);

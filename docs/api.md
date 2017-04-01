@@ -91,6 +91,21 @@ when the order been placed, then the customer can not change it anymore.
 - Method: POST
 - Payload: PlaceOrderRequest
 - Response: order
+- Exceptions
+
+| Exception         | means        | http code | customized code|
+|----|----|----|
+| BuildOrderException | build order failed. | 500| 60001
+| ChangeInventoryException | build order failed. | 500| 60002
+| PayOrderException | build order failed. | 500| 60003
+
+- Exception body:
+```json
+{
+  "code": customized code,
+  "message": customized message
+}
+```
 
 
 # 4 Actions

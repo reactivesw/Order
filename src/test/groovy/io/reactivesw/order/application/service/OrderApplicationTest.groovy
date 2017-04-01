@@ -8,10 +8,9 @@ import io.reactivesw.order.application.model.PaymentView
 import io.reactivesw.order.application.model.mapper.OrderMapper
 import io.reactivesw.order.domain.model.Order
 import io.reactivesw.order.domain.service.OrderService
-import io.reactivesw.order.infrastructure.exception.PlaceOrderFailedException
+import io.reactivesw.order.infrastructure.exception.BuildOrderException
+import io.reactivesw.order.infrastructure.exception.CheckoutCartException
 import io.reactivesw.order.infrastructure.update.UpdateAction
-import org.springframework.http.HttpStatus
-import org.springframework.web.client.HttpClientErrorException
 import spock.lang.Specification
 
 /**
@@ -60,10 +59,10 @@ class OrderApplicationTest extends Specification {
 
     def "Test 1.2: Checkout with cart not exits."() {
         when:
-        restClient.getCart(_) >> { throw new HttpClientErrorException(HttpStatus.NOT_FOUND) }
+        restClient.getCart(_) >> { throw new CheckoutCartException("checkout cart failed.") }
         application.place("cartId", "addressId", "creditCardId")
         then:
-        thrown(PlaceOrderFailedException)
+        thrown(BuildOrderException)
     }
 
     def "Test 2.1 update order with actions"() {

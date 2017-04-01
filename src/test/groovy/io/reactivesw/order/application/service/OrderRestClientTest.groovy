@@ -1,8 +1,8 @@
 package io.reactivesw.order.application.service
 
-import io.reactivesw.exception.NotExistException
 import io.reactivesw.order.application.model.InventoryRequest
 import io.reactivesw.order.application.model.PayRequest
+import io.reactivesw.order.infrastructure.exception.*
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
@@ -42,7 +42,7 @@ class OrderRestClientTest extends Specification {
         restTemplate.getForObject(_, _) >> { throw new HttpClientErrorException(HttpStatus.NOT_FOUND) }
         orderRestClient.getCart("cartId")
         then:
-        thrown(NotExistException)
+        thrown(CheckoutCartException)
     }
 
     def "Test 1.3: get cart failed"() {
@@ -50,7 +50,7 @@ class OrderRestClientTest extends Specification {
         restTemplate.getForObject(_, _) >> { throw new HttpClientErrorException(HttpStatus.CONFLICT) }
         orderRestClient.getCart("cartId")
         then:
-        thrown(HttpClientErrorException)
+        thrown(CheckoutCartException)
     }
 
     def "Test 2.1: get product"() {
@@ -66,7 +66,7 @@ class OrderRestClientTest extends Specification {
         restTemplate.getForObject(_, _) >> { throw new HttpClientErrorException(HttpStatus.NOT_FOUND) }
         orderRestClient.getProduct("productId", 1)
         then:
-        thrown(NotExistException)
+        thrown(GetProductException)
     }
 
     def "Test 2.3: get product failed"() {
@@ -74,7 +74,7 @@ class OrderRestClientTest extends Specification {
         restTemplate.getForObject(_, _) >> { throw new HttpClientErrorException(HttpStatus.CONFLICT) }
         orderRestClient.getProduct("productId", 1)
         then:
-        thrown(HttpClientErrorException)
+        thrown(GetProductException)
     }
 
     def "Test 3.1: get Address"() {
@@ -90,7 +90,7 @@ class OrderRestClientTest extends Specification {
         restTemplate.getForObject(_, _) >> { throw new HttpClientErrorException(HttpStatus.NOT_FOUND) }
         orderRestClient.getAddress("addressId")
         then:
-        thrown(NotExistException)
+        thrown(GetAddressException)
     }
 
     def "Test 3.3: get address failed"() {
@@ -98,7 +98,7 @@ class OrderRestClientTest extends Specification {
         restTemplate.getForObject(_, _) >> { throw new HttpClientErrorException(HttpStatus.CONFLICT) }
         orderRestClient.getAddress("addressId")
         then:
-        thrown(HttpClientErrorException)
+        thrown(GetAddressException)
     }
 
     def "Test 4.1: change product inventory"() {
@@ -113,7 +113,7 @@ class OrderRestClientTest extends Specification {
         restTemplate.put(_, _) >> { throw new HttpClientErrorException(HttpStatus.NOT_FOUND) }
         orderRestClient.changeProductInventory(new ArrayList<InventoryRequest>())
         then:
-        thrown(HttpClientErrorException)
+        thrown(ReserveInventoryException)
     }
 
     def "Test 5.1: pay order "() {
@@ -129,6 +129,6 @@ class OrderRestClientTest extends Specification {
         restTemplate.postForObject(_, _, _) >> { throw new HttpClientErrorException(HttpStatus.NOT_FOUND) }
         orderRestClient.pay(new PayRequest())
         then:
-        thrown(HttpClientErrorException)
+        thrown(PayOrderException)
     }
 }
