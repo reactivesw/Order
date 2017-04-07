@@ -34,7 +34,7 @@ public final class OrderMapper {
     entity.setTotalPrice(MoneyMapper.toEntity(cart.getTotalPrice()));
     entity.setOrderStatus(OrderStatus.Created);
 
-    entity.setShippingAddress(ShippingAddressMapper.modelToEntity(address));
+    entity.setShippingAddress(ShippingAddressMapper.toEntity(address));
     return entity;
   }
 
@@ -56,6 +56,7 @@ public final class OrderMapper {
     model.setLineItems(LineItemMapper.toViews(entity.getLineItems()));
     model.setTotalPrice(MoneyMapper.toView(entity.getTotalPrice()));
     model.setOrderStatus(entity.getOrderStatus());
+    model.setShippingAddress(ShippingAddressMapper.toView(entity.getShippingAddress()));
 
     return model;
   }

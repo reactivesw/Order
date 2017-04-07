@@ -20,7 +20,7 @@ public final class ShippingAddressMapper {
    * @param view the model
    * @return the shipping address value
    */
-  public static ShippingAddress modelToEntity(AddressView view) {
+  public static ShippingAddress toEntity(AddressView view) {
     ShippingAddress address = new ShippingAddress();
 
     if (view != null) {
@@ -41,6 +41,38 @@ public final class ShippingAddressMapper {
       address.setState(view.getState());
 
       address.setCity(view.getCity());
+    }
+
+    return address;
+  }
+
+  /**
+   * Model to entity shipping address value.
+   *
+   * @param entity the entity
+   * @return the shipping address view
+   */
+  public static AddressView toView(ShippingAddress entity) {
+    AddressView address = new AddressView();
+
+    if (entity != null) {
+      address.setId(entity.getId());
+
+      address.setFullName(entity.getFullName());
+
+      address.setPhone(entity.getPhone());
+
+      address.setZip(entity.getZip());
+
+      address.setFirstLine(entity.getFirstLine());
+
+      address.setSecondLine(entity.getSecondLine());
+
+      address.setCountry(entity.getCountry());
+
+      address.setState(entity.getState());
+
+      address.setCity(entity.getCity());
     }
 
     return address;
