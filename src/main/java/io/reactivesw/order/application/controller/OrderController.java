@@ -1,5 +1,6 @@
 package io.reactivesw.order.application.controller;
 
+import io.reactivesw.order.application.model.DeleteRequest;
 import io.reactivesw.order.application.model.OrderView;
 import io.reactivesw.order.application.model.PlaceOrderRequest;
 import io.reactivesw.order.application.model.mapper.OrderMapper;
@@ -85,7 +86,7 @@ public class OrderController {
    * get orders by customerId.
    *
    * @param customerId
-   * @return
+   * @return List<OrderView>
    */
   @GetMapping(Router.ORDER_ROOT)
   public List<OrderView> getOrdersByCustomerId(@RequestParam String customerId) {
@@ -119,14 +120,14 @@ public class OrderController {
    * Delete order.
    *
    * @param orderId the order id
-   * @param version the order version
+   * @param request the order version
    */
   @DeleteMapping(Router.ORDER_WITH_ID)
   public void deleteOrder(@PathVariable(Router.ORDER_ID) String orderId,
-                          @RequestParam Integer version) {
-    LOG.info("enter. order: {}.", orderId);
+                          @RequestBody @Valid DeleteRequest request) {
+    LOG.info("enter. order: {}, DeleteRequest: {}.", orderId, request);
 
-    orderService.deleteOrder(orderId, version);
+    orderService.deleteOrder(orderId, request.getVersion());
 
     LOG.info("exit. deleteOrder.");
   }
