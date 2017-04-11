@@ -57,6 +57,11 @@ Order service.
 | creditCardId      | String            | NOT NULL|
 | cartId            | String            | NOT NULL|
 
+## 2.6 DeleteRequest
+| field name        | field type        | comments |
+|----|----|----|
+| version           | Integer           | NOT NULL|
+
 ## 2.6 OrderStatus enum
 ```java
 
@@ -110,7 +115,7 @@ Order service.
 ## 3.3 delete order
 - Path: /{orderId}
 - Method: DELETE
-- Payload: orderId --NotNull
+- Payload: orderId --NotNull, DeleteRequest -- null null
 - Response: NONE
 
 ## 3.4 Place order
