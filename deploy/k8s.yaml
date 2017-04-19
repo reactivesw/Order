@@ -15,7 +15,7 @@ items:
       spec:
         containers:
         - name: order
-          image: reactivesw/order:0.0.1
+          image: reactivesw/order:0.0.4-dev
           imagePullPolicy: Always
           ports:
           - containerPort: 80
