@@ -2,6 +2,7 @@ package io.reactivesw.order.application.model.event;
 
 import io.reactivesw.model.Money;
 import io.reactivesw.order.application.model.InventoryRequest;
+
 import lombok.Data;
 
 import java.util.List;
