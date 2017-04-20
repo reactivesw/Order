@@ -3,18 +3,14 @@ package io.reactivesw.order.application.service;
 import io.reactivesw.order.application.model.AddressView;
 import io.reactivesw.order.application.model.CartView;
 import io.reactivesw.order.application.model.OrderView;
-import io.reactivesw.order.application.model.event.OrderCreatedEvent;
-import io.reactivesw.order.application.model.mapper.EventMessageMapper;
-import io.reactivesw.order.application.model.mapper.OrderCreatedEventMapper;
 import io.reactivesw.order.application.model.mapper.OrderMapper;
-import io.reactivesw.order.domain.model.EventMessage;
 import io.reactivesw.order.domain.model.Order;
+import io.reactivesw.order.domain.service.EventService;
 import io.reactivesw.order.domain.service.OrderService;
 import io.reactivesw.order.infrastructure.enums.OrderStatus;
 import io.reactivesw.order.infrastructure.exception.BuildOrderException;
 import io.reactivesw.order.infrastructure.exception.CheckoutCartException;
 import io.reactivesw.order.infrastructure.exception.GetAddressException;
-import io.reactivesw.order.infrastructure.repository.EventRepository;
 import io.reactivesw.order.infrastructure.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +47,7 @@ public class OrderApplication {
    * The event repository.
    */
   @Autowired
-  private transient EventRepository eventRepository;
+  private transient EventService eventService;
 
   /**
    * place an order.
@@ -60,16 +56,14 @@ public class OrderApplication {
    */
   @Transactional
   public OrderView place(String cartId, String addressId, String creditCardId) {
-    LOG.debug("Enter: cartId: {}.", cartId);
+    LOG.debug("Enter. CartId: {}.", cartId);
 
     // build an order with cart and address.
     Order order = buildOrder(cartId, addressId);
 
-    OrderCreatedEvent event = OrderCreatedEventMapper.build(order, creditCardId);
-    EventMessage message = EventMessageMapper.build(event);
-    eventRepository.save(message);
+    eventService.createMessage(order, creditCardId);
 
-    LOG.debug("Enter: order: {}.", order);
+    LOG.debug("Exit. Order: {}.", order);
     return OrderMapper.toView(order);
   }
 
