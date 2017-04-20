@@ -59,6 +59,7 @@ public class EventService {
     return savedMsg;
   }
 
+
   /**
    * Get events from db, and set their status to PENDING.
    *
@@ -115,4 +116,5 @@ public class EventService {
       }
     };
   }
+
 }
