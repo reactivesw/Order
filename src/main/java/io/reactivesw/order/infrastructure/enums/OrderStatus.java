@@ -10,9 +10,13 @@ public enum OrderStatus {
    */
   Created,
   /**
-   * Confirmed order state.
+   * Reserved inventory.
    */
   Reserved,
+  /**
+   * Reserve inventory failed.
+   */
+  ReservedFailed,
   /**
    * Payed.
    */

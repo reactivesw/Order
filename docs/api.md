@@ -70,9 +70,13 @@ Order service.
    */
   Created,
   /**
-   * Created, and reserved inventory
+   * Reserved inventory.
    */
   Reserved,
+  /**
+   * Reserve inventory failed.
+   */
+  ReservedFailed,
   /**
    * payed.
    */
