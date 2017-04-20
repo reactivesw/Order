@@ -45,10 +45,10 @@ public class EventPublisher {
    */
   @Autowired
   public EventPublisher(EventConfig eventConfig) {
-    Producer signinProducer = DefaultProducerFactory.createGoogleProducer(
+    Producer orderCreatedProducer = DefaultProducerFactory.createGoogleProducer(
         eventConfig.getGoogleCloudProjectId(), EventTopics.ORDER_CREATED);
 
-    producerMap.put(EventTopics.ORDER_CREATED, signinProducer);
+    producerMap.put(EventTopics.ORDER_CREATED, orderCreatedProducer);
   }
 
   /**

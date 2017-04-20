@@ -78,6 +78,10 @@ Order service.
    */
   Payed,
   /**
+   * Payed failed.
+   */
+  PayFailed,
+  /**
    * Shipped
    */
   Shipped,
