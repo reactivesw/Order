@@ -14,9 +14,13 @@ public enum OrderStatus {
    */
   Reserved,
   /**
-   * payed.
+   * Payed.
    */
   Payed,
+  /**
+   * Payed failed.
+   */
+  PayFailed,
   /**
    * Shipped
    */
