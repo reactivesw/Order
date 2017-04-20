@@ -6,7 +6,7 @@ package io.reactivesw.order.infrastructure.util;
 public final class EventSubscribers {
 
   /**
-   * order got payed event.
+   * Order got payed event.
    */
   public static final String ORDER_PAYMENT_PAYED = "order-payment-payed";
 }
