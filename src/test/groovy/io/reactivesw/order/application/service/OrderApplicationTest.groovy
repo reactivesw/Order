@@ -7,6 +7,7 @@ import io.reactivesw.order.application.model.LineItemView
 import io.reactivesw.order.application.model.PaymentView
 import io.reactivesw.order.application.model.mapper.OrderMapper
 import io.reactivesw.order.domain.model.Order
+import io.reactivesw.order.domain.service.EventService
 import io.reactivesw.order.domain.service.OrderService
 import io.reactivesw.order.infrastructure.exception.BuildOrderException
 import io.reactivesw.order.infrastructure.exception.CheckoutCartException
@@ -14,7 +15,7 @@ import io.reactivesw.order.infrastructure.update.UpdateAction
 import spock.lang.Specification
 
 /**
- * order application test.
+ * Order application test.
  */
 class OrderApplicationTest extends Specification {
 
@@ -22,7 +23,10 @@ class OrderApplicationTest extends Specification {
 
     def orderService = Mock(OrderService)
 
+    EventService eventService = Mock(EventService);
+
     OrderApplication application;
+
 
     CartView cartView
 
@@ -42,7 +46,7 @@ class OrderApplicationTest extends Specification {
         order = OrderMapper.build(cartView, addressView)
         order.setId("orderId")
 
-        application = new OrderApplication(restClient: restClient, orderService: orderService)
+        application = new OrderApplication(restClient: restClient, orderService: orderService, eventService: eventService)
     }
 
     def "Test 1.1: Place order correct."() {

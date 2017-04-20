@@ -22,7 +22,7 @@ When the customer place an order, then this system will produce a event.
 ```java
   String orderId;
 
-  String paymentId;
+  String paymentMethodId;
   
   String shippingAddressId;
   

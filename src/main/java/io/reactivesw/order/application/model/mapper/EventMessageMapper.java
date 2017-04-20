@@ -30,7 +30,7 @@ public final class EventMessageMapper {
    * @param event OrderCreatedEvent
    * @return EventMessage
    */
-  public static EventMessage toEntity(OrderCreatedEvent event) {
+  public static EventMessage build(OrderCreatedEvent event) {
     EventMessage eventMessage = new EventMessage();
 
     eventMessage.setStatus(EventStatus.CREATED);
