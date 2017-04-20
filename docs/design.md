@@ -43,7 +43,7 @@ When the customer place an order, then this system will produce a event.
 ```
 
 ### 4.2 Consumer Of Order Payed Event
-When an order is payed by `payment` service, it will produce an event, the order consume this event, and change order's status.
+When an order is payed by `payment` service, it will produce an event, the order service consume this event, and change order's status.
 #### 4.2.1 Subscribe
 `order-payment-payed`
 #### 4.2.2 Model
@@ -54,7 +54,7 @@ When an order is payed by `payment` service, it will produce an event, the order
 3. change order's status and save the pay result
 
 ### 4.3 Consumer Of Order Reserved Event
-When an order is reserved by inventory service, it will produce an event, the order consume this event, and change order's status.
+When an order is reserved by inventory service, it will produce an event, the order service consume this event, and change order's status.
 #### 4.3.1 Subscribe
 `order-inventory-reserved`
 #### 4.3.2 Model
