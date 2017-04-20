@@ -3,17 +3,17 @@ package io.reactivesw.order.application.model.event;
 import lombok.Data;
 
 /**
- * inventory request.
+ * Inventory request.
  */
 @Data
 public class InventoryRequest {
   /**
-   * sku of the variant.
+   * Sku of the variant.
    */
   private String sku;
 
   /**
-   * quantity.
+   * Quantity.
    */
   private Integer quantity;
 }

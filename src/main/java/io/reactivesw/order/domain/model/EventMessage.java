@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * event.
+ * Event.
  */
 @Data
 @Entity
@@ -21,7 +21,7 @@ import javax.persistence.Table;
 public class EventMessage {
 
   /**
-   * uuid.
+   * Uuid.
    */
   @Id
   @GeneratedValue(generator = "uuid")
@@ -36,17 +36,17 @@ public class EventMessage {
   private long createdAt;
 
   /**
-   * sequence number.
+   * Sequence number.
    */
   private String sequenceNumber;
 
   /**
-   * the event will be expired in expire.
+   * The event will be expired in expire.
    */
   private long expire;
 
   /**
-   * version.
+   * Version.
    */
   private Integer version;
 
@@ -56,12 +56,12 @@ public class EventMessage {
   private String data;
 
   /**
-   * topic.
+   * Topic.
    */
   private String topic;
 
   /**
-   * event status.
+   * Event status.
    */
   private EventStatus status;
 }

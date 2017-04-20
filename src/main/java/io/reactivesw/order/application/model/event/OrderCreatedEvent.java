@@ -12,27 +12,27 @@ import java.util.List;
 public class OrderCreatedEvent {
 
   /**
-   * order id.
+   * Order id.
    */
   private String orderId;
 
   /**
-   * payment id.
+   * Payment id.
    */
   private String paymentId;
 
   /**
-   * shipping address id.
+   * Shipping address id.
    */
   private String shippingAddressId;
 
   /**
-   * inventory request list.
+   * Inventory request list.
    */
   private List<InventoryRequest> inventoryRequests;
 
   /**
-   * total amount of this order.
+   * Total amount of this order.
    */
   private Money totalAmount;
 }

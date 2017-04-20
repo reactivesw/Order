@@ -13,21 +13,21 @@ import io.reactivesw.order.infrastructure.util.EventTopics;
 public final class EventMessageMapper {
 
   /**
-   * json serializer.
+   * Json serializer.
    */
   private transient static JsonSerializer jsonSerializer = new JsonSerializer();
 
   /**
-   * default private constructor.
+   * Default private constructor.
    */
   private EventMessageMapper() {
     // do nothing.
   }
 
   /**
-   * to entity.
+   * To entity.
    *
-   * @param event
+   * @param event OrderCreatedEvent
    * @return EventMessage
    */
   public static EventMessage toEntity(OrderCreatedEvent event) {
