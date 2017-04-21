@@ -15,22 +15,22 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: io.reactivesw.database.dialect.JSONBPostgreSQLDialect
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
 
 product:
   service:
-    uri: http://35.184.19.183/products/
+    uri: http://product/
 customer:
   service:
-    uri: http://35.184.19.183/customers/
+    uri: http://customer-info/
 cart:
   service:
-    uri: http://35.184.19.183/carts/
+    uri: http://cart/
 inventory:
   service:
-    uri: http://35.184.19.183/inventory/
+    uri: http://inventory/
 payment:
   service:
-    uri: http://35.184.19.183/payments/
+    uri: http://payment/
