@@ -36,6 +36,8 @@ items:
             value: http://product/
           - name: payment_service_uri
             value: http://payment/
+          - name: io_reactivesw_message_google_project_id
+            value: reactivesw-project
           - name: jwt_secret
             valueFrom:
               secretKeyRef:
