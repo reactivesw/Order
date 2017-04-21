@@ -19,6 +19,16 @@ spring:
     hibernate:
       ddl-auto: update
 
+io:
+  reactivesw:
+    message:
+      broker:
+        host: http://www.reactivesw.org
+      brokerType: google
+      google:
+        project:
+          id: reactivesw-project
+
 product:
   service:
     uri: http://product/
