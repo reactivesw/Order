@@ -53,6 +53,7 @@ public class EventMessage {
   /**
    * Json string payload.
    */
+  @Column(length = 2048)
   private String data;
 
   /**

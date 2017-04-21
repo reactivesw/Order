@@ -91,7 +91,7 @@ public class OrderApplication {
    * @return Order
    */
   private Order buildOrder(String cartId, String addressId) {
-
+    LOG.debug("Enter. cartId: {}, addressId: {}.", cartId, addressId);
     try {
       CartView cart = restClient.getCart(cartId);
       AddressView address = restClient.getAddress(addressId);
@@ -102,6 +102,7 @@ public class OrderApplication {
       // create the order.
       return orderService.save(order);
     } catch (CheckoutCartException | GetAddressException ex) {
+      LOG.debug("Build order failed. cartId: {}, addressId: {}.", cartId, addressId);
       throw new BuildOrderException("Build order failed.");
     }
   }
