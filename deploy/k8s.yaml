@@ -38,13 +38,13 @@ items:
             value: http://payment/
           - name: io_reactivesw_message_google_project_id
             value: reactivesw-project
-          - name: io_reactivesw_message_topic_ordercreated-name
+          - name: io_reactivesw_message_topic_ordercreated_name
             value: reactivesw-dev-order-created
-          - name: io_reactivesw_message_topic_ordercreated-version
+          - name: io_reactivesw_message_topic_ordercreated_version
             value: reactivesw-dev-order-created
-          - name: io_reactivesw_message_topic_ordercreated-subscriber
+          - name: io_reactivesw_message_topic_ordercreated_subscriber
             value: dev-inventory-order-reserved
-          - name: io_reactivesw_message_topic_orderpayed-subscriber
+          - name: io_reactivesw_message_topic_orderpayed_subscriber
             value: dev-payment-order-payed
           - name: jwt_secret
             valueFrom:
