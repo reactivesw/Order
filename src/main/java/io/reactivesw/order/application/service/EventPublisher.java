@@ -7,7 +7,6 @@ import io.reactivesw.message.client.producer.Producer;
 import io.reactivesw.order.domain.model.EventMessage;
 import io.reactivesw.order.domain.service.EventService;
 import io.reactivesw.order.infrastructure.configuration.EventConfig;
-import io.reactivesw.order.infrastructure.util.EventTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +45,9 @@ public class EventPublisher {
   @Autowired
   public EventPublisher(EventConfig eventConfig) {
     Producer orderCreatedProducer = DefaultProducerFactory.createGoogleProducer(
-        eventConfig.getGoogleCloudProjectId(), EventTopics.ORDER_CREATED);
+        eventConfig.getGoogleCloudProjectId(), eventConfig.getOrderCreatedName());
 
-    producerMap.put(EventTopics.ORDER_CREATED, orderCreatedProducer);
+    producerMap.put(eventConfig.getOrderCreatedName(), orderCreatedProducer);
   }
 
   /**

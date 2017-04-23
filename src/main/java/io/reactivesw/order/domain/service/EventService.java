@@ -5,6 +5,7 @@ import io.reactivesw.order.application.model.mapper.EventMessageMapper;
 import io.reactivesw.order.application.model.mapper.OrderCreatedEventMapper;
 import io.reactivesw.order.domain.model.EventMessage;
 import io.reactivesw.order.domain.model.Order;
+import io.reactivesw.order.infrastructure.configuration.EventConfig;
 import io.reactivesw.order.infrastructure.enums.EventStatus;
 import io.reactivesw.order.infrastructure.repository.EventRepository;
 import org.slf4j.Logger;
@@ -42,6 +43,12 @@ public class EventService {
   private transient EventRepository eventRepository;
 
   /**
+   * The event config.
+   */
+  @Autowired
+  private transient EventConfig eventConfig;
+
+  /**
    * Create Message with order and credit card id.
    *
    * @param order        Order
@@ -52,7 +59,7 @@ public class EventService {
     LOG.debug("Enter. OrderId: {}, creditCardId: {}.", order, creditCardId);
 
     OrderCreatedEvent event = OrderCreatedEventMapper.build(order, creditCardId);
-    EventMessage message = EventMessageMapper.build(event);
+    EventMessage message = EventMessageMapper.build(event, eventConfig);
     EventMessage savedMsg = eventRepository.save(message);
 
     LOG.debug("Exit. Message: {}.", savedMsg);

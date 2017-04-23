@@ -15,7 +15,7 @@ items:
       spec:
         containers:
         - name: order
-          image: reactivesw/order:0.0.4-dev
+          image: reactivesw/order:0.0.4
           imagePullPolicy: Always
           ports:
           - containerPort: 80
@@ -38,6 +38,14 @@ items:
             value: http://payment/
           - name: io_reactivesw_message_google_project_id
             value: reactivesw-project
+          - name: io_reactivesw_message_topic_ordercreated-name
+            value: reactivesw-dev-order-created
+          - name: io_reactivesw_message_topic_ordercreated-version
+            value: reactivesw-dev-order-created
+          - name: io_reactivesw_message_topic_ordercreated-subscriber
+            value: dev-inventory-order-reserved
+          - name: io_reactivesw_message_topic_orderpayed-subscriber
+            value: dev-payment-order-payed
           - name: jwt_secret
             valueFrom:
               secretKeyRef:

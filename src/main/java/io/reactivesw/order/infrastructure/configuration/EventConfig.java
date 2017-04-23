@@ -16,4 +16,28 @@ public class EventConfig {
    */
   @Value("${io.reactivesw.message.google.project.id}")
   private String googleCloudProjectId;
+
+  /**
+   * Order created event topic name.
+   */
+  @Value("${io.reactivesw.message.topic.ordercreated.name}")
+  private String orderCreatedName;
+
+  /**
+   * Order created event topic version.
+   */
+  @Value("${io.reactivesw.message.topic.ordercreated.version}")
+  private Integer orderCreatedVersion;
+
+  /**
+   * Order payed event version.
+   */
+  @Value("${io.reactivesw.message.topic.orderpayed.subscriber}")
+  private String orderPayedSubscriber;
+
+  /**
+   * Order reserved event version.
+   */
+  @Value("${io.reactivesw.message.topic.orderreserved.subscriber}")
+  private String orderReservedSubscriber;
 }

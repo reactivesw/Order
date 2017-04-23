@@ -9,7 +9,6 @@ import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.service.OrderService;
 import io.reactivesw.order.infrastructure.configuration.EventConfig;
 import io.reactivesw.order.infrastructure.enums.OrderStatus;
-import io.reactivesw.order.infrastructure.util.EventSubscribers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,7 @@ public class OrderReservedConsumer {
   @Autowired
   public OrderReservedConsumer(EventConfig eventConfig) {
     consumer = DefaultConsumerFactory.createGoogleConsumer(eventConfig.getGoogleCloudProjectId(),
-        EventSubscribers.ORDER_INVENTORY_RESERVED);
+        eventConfig.getOrderReservedSubscriber());
     jsonDeserializer = new JsonDeserializer(OrderReservedEvent.class);
   }
 
