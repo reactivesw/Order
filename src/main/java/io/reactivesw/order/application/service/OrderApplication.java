@@ -2,14 +2,10 @@ package io.reactivesw.order.application.service;
 
 import io.reactivesw.order.application.model.AddressView;
 import io.reactivesw.order.application.model.CartView;
-import io.reactivesw.order.application.model.InventoryRequest;
 import io.reactivesw.order.application.model.OrderView;
-import io.reactivesw.order.application.model.PayRequest;
-import io.reactivesw.order.application.model.PaymentView;
-import io.reactivesw.order.application.model.mapper.MoneyMapper;
 import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.domain.model.Order;
-import io.reactivesw.order.domain.model.value.LineItem;
+import io.reactivesw.order.domain.service.EventService;
 import io.reactivesw.order.domain.service.OrderService;
 import io.reactivesw.order.infrastructure.enums.OrderStatus;
 import io.reactivesw.order.infrastructure.exception.BuildOrderException;
@@ -20,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,23 +44,26 @@ public class OrderApplication {
   private transient OrderService orderService;
 
   /**
+   * The event repository.
+   */
+  @Autowired
+  private transient EventService eventService;
+
+  /**
    * place an order.
    *
    * @return Order view
    */
+  @Transactional
   public OrderView place(String cartId, String addressId, String creditCardId) {
-    LOG.debug("enter: cartId: {}", cartId);
+    LOG.debug("Enter. CartId: {}.", cartId);
 
     // build an order with cart and address.
     Order order = buildOrder(cartId, addressId);
-    // change inventory.
-    changeInventory(order);
-    // call payment service to pay the order.
-    orderPay(order, creditCardId);
 
-    orderService.save(order);
+    eventService.createMessage(order, creditCardId);
 
-    LOG.debug("enter: order: {}", order);
+    LOG.debug("Exit. Order: {}.", order);
     return OrderMapper.toView(order);
   }
 
@@ -92,7 +91,7 @@ public class OrderApplication {
    * @return Order
    */
   private Order buildOrder(String cartId, String addressId) {
-
+    LOG.debug("Enter. cartId: {}, addressId: {}.", cartId, addressId);
     try {
       CartView cart = restClient.getCart(cartId);
       AddressView address = restClient.getAddress(addressId);
@@ -103,45 +102,9 @@ public class OrderApplication {
       // create the order.
       return orderService.save(order);
     } catch (CheckoutCartException | GetAddressException ex) {
+      LOG.debug("Build order failed. cartId: {}, addressId: {}.", cartId, addressId);
       throw new BuildOrderException("Build order failed.");
     }
   }
 
-  /**
-   * change product inventory.
-   *
-   * @param order Order
-   */
-  private void changeInventory(Order order) {
-    List<LineItem> items = order.getLineItems();
-    List<InventoryRequest> inventoryRequests = new ArrayList<>();
-    items.stream().forEach(
-        lineItem -> {
-          InventoryRequest request = new InventoryRequest();
-          request.setQuantity(lineItem.getQuantity());
-          request.setSkuName(lineItem.getSku());
-          inventoryRequests.add(request);
-        }
-    );
-    restClient.changeProductInventory(inventoryRequests);
-    order.setOrderStatus(OrderStatus.Reserved);
-  }
-
-  /**
-   * pay.
-   *
-   * @param order        order
-   * @param creditCartId credit card id
-   * @return payment view
-   */
-  private void orderPay(Order order, String creditCartId) {
-    PayRequest request = new PayRequest();
-    request.setCustomerId(order.getCustomerId());
-    request.setCreditCardId(creditCartId);
-    request.setAmount(MoneyMapper.toView(order.getTotalPrice()));
-    PaymentView paymentView = restClient.pay(request);
-
-    order.setPaymentId(paymentView.getId());
-    order.setOrderStatus(OrderStatus.Payed);
-  }
 }
