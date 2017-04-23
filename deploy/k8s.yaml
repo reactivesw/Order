@@ -41,8 +41,8 @@ items:
           - name: io_reactivesw_message_topic_ordercreated_name
             value: reactivesw-dev-order-created
           - name: io_reactivesw_message_topic_ordercreated_version
-            value: reactivesw-dev-order-created
-          - name: io_reactivesw_message_topic_ordercreated_subscriber
+            value: "1"
+          - name: io_reactivesw_message_topic_orderreserved_subscriber
             value: dev-inventory-order-reserved
           - name: io_reactivesw_message_topic_orderpayed_subscriber
             value: dev-payment-order-payed
