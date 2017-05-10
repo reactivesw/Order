@@ -12,7 +12,7 @@ In order model, we store a string named `orderNumber` and use it to identify
 the placed order. Each time a new order is placed, a `orderNumber` will be
 generated which will be shown to customer, here is the rule:
 
-1. get `UUID` class to generate a unique long number, like: 4770411127678978567. 
+1. use `UUID` class to generate a unique long number, like: 4770411127678978567. 
 
 2. convert value generated above to string and save it to `orderNumber` 
 ## 3. Workflow
