@@ -5,7 +5,18 @@ This doc describes the design of order service.
 
 
 ## 2. Model Design
-- View model: [View Model](./api.md)
+
+### 2.1. View model design
+	- View model: [View Model](./api.md)
+
+### 2.2. Order number design
+In order model, we store a string named `order number` and use it to identify
+the placed order. Each time a new order is placed, a `order number` will be
+generated which will be shown to customer, here is the rule:
+
+1. get system current time in milliseconds, like: 19009906819555. 
+
+2. convert value generated above to string and save it to `order number` 
 
 ## 3. Workflow
 

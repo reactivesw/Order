@@ -13,7 +13,8 @@ Order service.
 | lineItems         | List<LineItemView>| |
 | totalPrice        | Money             | |
 | shippingAddress   | AddressView       | |
-| orderStatus       | OrderStatus        | |
+| orderStatus       | OrderStatus       | |
+| orderNumber       | String            | |
 
 ## 2.2 LineItemView 
 | field name        | field type        | comments  |
