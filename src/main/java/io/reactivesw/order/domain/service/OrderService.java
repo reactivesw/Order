@@ -101,6 +101,11 @@ public class OrderService {
 
   /**
    * update order with actions.
+   *
+   * @param id
+   * @param version
+   * @param  actions
+   * @return
    */
   public Order updateOrder(String id, Integer version, List<UpdateAction> actions) {
     Order order = this.getById(id);
