@@ -181,7 +181,7 @@ public class OrderService {
   }
 
   /**
-   * Generate an order number when places order. Reference: http://stackoverflow.com/questions/325443/likelihood-of-collision-using-most-significant-bits-of-a-uuid-in-java
+   * Generate an order number when places order.
    *
    * @return orderNumber
    */

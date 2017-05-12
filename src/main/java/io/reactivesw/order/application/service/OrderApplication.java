@@ -85,7 +85,7 @@ public class OrderApplication {
   }
 
   /**
-   * build an order with cart and address.
+   * Build an order with cart and address.
    *
    * @param cartId String
    * @param addressId String
