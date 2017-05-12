@@ -4,8 +4,10 @@ import io.reactivesw.order.domain.model.value.LineItem;
 import io.reactivesw.order.domain.model.value.MoneyValue;
 import io.reactivesw.order.domain.model.value.ShippingAddress;
 import io.reactivesw.order.infrastructure.enums.OrderStatus;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -115,4 +117,9 @@ public class Order {
   @Column
   private String paymentId;
 
+  /**
+   * Order number is used to identify order for customer.
+   */
+  @Column
+  private String orderNumber;
 }

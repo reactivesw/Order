@@ -56,6 +56,7 @@ public final class OrderMapper {
     model.setLineItems(LineItemMapper.toViews(entity.getLineItems()));
     model.setTotalPrice(MoneyMapper.toView(entity.getTotalPrice()));
     model.setOrderStatus(entity.getOrderStatus());
+    model.setOrderNumber(entity.getOrderNumber());
     model.setShippingAddress(ShippingAddressMapper.toView(entity.getShippingAddress()));
 
     return model;

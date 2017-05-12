@@ -8,18 +8,21 @@ import io.reactivesw.order.domain.model.value.MoneyValue;
 import io.reactivesw.order.infrastructure.repository.OrderRepository;
 import io.reactivesw.order.infrastructure.update.UpdateAction;
 import io.reactivesw.order.infrastructure.update.UpdaterService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * order service.
  */
 @Service
 public class OrderService {
+
   /**
    * log.
    */
@@ -175,5 +178,16 @@ public class OrderService {
     orderTotal.setCentAmount(cartTotalPrice);
     order.setTotalPrice(orderTotal);
     LOG.debug("exit: order after calculate: {}", order);
+  }
+
+  /**
+   * Generate an order number when places order.
+   *
+   * @return orderNumber
+   */
+  public String generateOrderNumber() {
+    // getLeastSignificantBits may get negative value, so and with Long.MAX_VALUE to ensure it is positive
+    Long orderNumber = UUID.randomUUID().getLeastSignificantBits() & Long.MAX_VALUE;
+    return orderNumber.toString();
   }
 }
