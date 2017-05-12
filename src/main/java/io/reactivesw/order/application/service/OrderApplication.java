@@ -12,6 +12,7 @@ import io.reactivesw.order.infrastructure.exception.BuildOrderException;
 import io.reactivesw.order.infrastructure.exception.CheckoutCartException;
 import io.reactivesw.order.infrastructure.exception.GetAddressException;
 import io.reactivesw.order.infrastructure.update.UpdateAction;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class OrderApplication {
   /**
    * use rest client to get cart.
    *
-   * @param id      cart id
+   * @param id cart id
    * @param version cart version
    * @return cart view
    */
@@ -84,9 +85,9 @@ public class OrderApplication {
   }
 
   /**
-   * build an order with cart and address.
+   * Build an order with cart and address.
    *
-   * @param cartId    String
+   * @param cartId String
    * @param addressId String
    * @return Order
    */
@@ -96,6 +97,7 @@ public class OrderApplication {
       CartView cart = restClient.getCart(cartId);
       AddressView address = restClient.getAddress(addressId);
       Order order = OrderMapper.build(cart, address);
+      order.setOrderNumber(orderService.generateOrderNumber());
       orderService.calculateCartPrice(order);
       order.setOrderStatus(OrderStatus.Created);
 
