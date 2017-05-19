@@ -7,6 +7,7 @@ import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.service.EventService;
 import io.reactivesw.order.domain.service.OrderService;
+import io.reactivesw.order.infrastructure.configuration.GeneralConfig;
 import io.reactivesw.order.infrastructure.enums.OrderStatus;
 import io.reactivesw.order.infrastructure.exception.BuildOrderException;
 import io.reactivesw.order.infrastructure.exception.CheckoutCartException;
@@ -51,6 +52,7 @@ public class OrderApplication {
   @Autowired
   private transient EventService eventService;
 
+
   /**
    * place an order.
    *
@@ -87,8 +89,6 @@ public class OrderApplication {
 
   /**
    * Build an order with cart and address.
-   * Generate an unique orderNumber and set into order object, if orderNumber is not unique,
-   * retry maxTries (default is 5) times.
    *
    * @param cartId String
    * @param addressId String
@@ -105,8 +105,20 @@ public class OrderApplication {
       LOG.debug("Build order failed. cartId: {}, addressId: {}.", cartId, addressId);
       throw new BuildOrderException("Build order failed.");
     }
+    return buildOrder(cart, address);
+  }
+
+  /**
+   * Build order with cart and address.
+   * Generate an unique orderNumber and set into order object, if orderNumber is not unique,
+   * retry maxTries (default is 5) times.
+   *
+   * @param cart cart
+   * @param address address
+   * @return built order
+   */
+  private Order buildOrder(CartView cart, AddressView address) {
     int count = 0;
-    int maxTries = 5;
     while (true) {
       try {
         Order order = OrderMapper.build(cart, address);
@@ -119,7 +131,7 @@ public class OrderApplication {
       } catch (DataIntegrityViolationException ex) {
         LOG.debug("Generated orderNumber is a not unique. Retry.");
         count += 1;
-        if (count >= maxTries) {
+        if (count >= GeneralConfig.GENERATE_ORDER_NUMBER_MAX_TRIES) {
           LOG.debug("OrderNumber must be unique, fail after retrying maxTries times.");
           throw new BuildOrderException("Build order failed.");
         }
