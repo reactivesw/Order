@@ -12,10 +12,14 @@ import io.reactivesw.order.infrastructure.update.UpdaterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.UUID;
+
 
 /**
  * order service.
@@ -52,10 +56,18 @@ public class OrderService {
    * @param order sample
    * @return the order view
    */
-  public Order save(Order order) {
+  //Create a new transaction if an exception occurs rather than it's rollback.
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public Order save(Order order) throws DataIntegrityViolationException {
     LOG.debug("enter: order: {},", order);
+    Order savedOrder = null;
+    try {
+      savedOrder = orderRepository.saveAndFlush(order);
+    } catch (DataIntegrityViolationException ex) {
+      LOG.debug("OrderNumber is not unique, save failed");
+      throw new DataIntegrityViolationException("OrderNumber must be unique");
 
-    Order savedOrder = orderRepository.save(order);
+    }
 
     LOG.debug("end: savedOrder : {}", savedOrder);
 
@@ -101,11 +113,6 @@ public class OrderService {
 
   /**
    * update order with actions.
-   *
-   * @param id
-   * @param version
-   * @param actions
-   * @return
    */
   public Order updateOrder(String id, Integer version, List<UpdateAction> actions) {
     Order order = this.getById(id);
@@ -185,9 +192,14 @@ public class OrderService {
    *
    * @return orderNumber
    */
-  public String generateOrderNumber() {
-    // getLeastSignificantBits may get negative value, so and with Long.MAX_VALUE to ensure it is positive
-    Long orderNumber = UUID.randomUUID().getLeastSignificantBits() & Long.MAX_VALUE;
-    return orderNumber.toString();
+  public long generateOrderNumber() {
+    SecureRandom ng = new SecureRandom();
+    long orderNumber = 0;
+    byte[] randomBytes = new byte[8];
+    ng.nextBytes(randomBytes);
+    for (int i = 0; i < randomBytes.length; i++) {
+      orderNumber = orderNumber << 8 | randomBytes[i] & 0xff;
+    }
+    return Math.abs(orderNumber >> 31); //Make ensure it is a positive number.
   }
 }

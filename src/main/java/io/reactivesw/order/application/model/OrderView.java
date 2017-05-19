@@ -74,5 +74,5 @@ public class OrderView {
   /**
    * Order number to identify order for customer.
    */
-  private String orderNumber;
+  private Long orderNumber;
 }

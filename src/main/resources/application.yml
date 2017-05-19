@@ -22,6 +22,14 @@ spring:
 io:
   reactivesw:
     message:
+      topic:
+        ordercreated:
+          name: reactivesw-dev-order-created
+          version: 1
+        orderreserved:
+          subscriber: dev-inventory-order-reserved
+        orderpayed:
+          subscriber: dev-payment-order-payed
       broker:
         host: http://www.reactivesw.org
       brokerType: google
