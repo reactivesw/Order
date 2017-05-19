@@ -3,7 +3,7 @@ package io.reactivesw.order.infrastructure.configuration;
 /**
  * General configuration for order.
  */
-public class GeneralConfig {
+public class AppConfig {
 
   /**
    * Maximum time to retry generate orderNumber after failed.

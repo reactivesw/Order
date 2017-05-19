@@ -7,7 +7,7 @@ import io.reactivesw.order.application.model.mapper.OrderMapper;
 import io.reactivesw.order.domain.model.Order;
 import io.reactivesw.order.domain.service.EventService;
 import io.reactivesw.order.domain.service.OrderService;
-import io.reactivesw.order.infrastructure.configuration.GeneralConfig;
+import io.reactivesw.order.infrastructure.configuration.AppConfig;
 import io.reactivesw.order.infrastructure.enums.OrderStatus;
 import io.reactivesw.order.infrastructure.exception.BuildOrderException;
 import io.reactivesw.order.infrastructure.exception.CheckoutCartException;
@@ -131,7 +131,7 @@ public class OrderApplication {
       } catch (DataIntegrityViolationException ex) {
         LOG.debug("Generated orderNumber is a not unique. Retry.");
         count += 1;
-        if (count >= GeneralConfig.GENERATE_ORDER_NUMBER_MAX_TRIES) {
+        if (count >= AppConfig.GENERATE_ORDER_NUMBER_MAX_TRIES) {
           LOG.debug("OrderNumber must be unique, fail after retrying maxTries times.");
           throw new BuildOrderException("Build order failed.");
         }
