@@ -12,7 +12,9 @@ import io.reactivesw.order.domain.service.OrderService
 import io.reactivesw.order.infrastructure.exception.BuildOrderException
 import io.reactivesw.order.infrastructure.exception.CheckoutCartException
 import io.reactivesw.order.infrastructure.update.UpdateAction
+import org.springframework.dao.DataIntegrityViolationException
 import spock.lang.Specification
+
 
 /**
  * Order application test.
@@ -26,7 +28,6 @@ class OrderApplicationTest extends Specification {
     EventService eventService = Mock(EventService);
 
     OrderApplication application;
-
 
     CartView cartView
 
@@ -77,5 +78,18 @@ class OrderApplicationTest extends Specification {
         noExceptionThrown()
     }
 
+    def "Test2.2 build order with same orderNumber, should throw an DataIntegrityViolationException"() {
+        when: "build order and place"
+        restClient.getCart(_) >> cartView
+        restClient.getAddress(_) >> addressView
+        OrderMapper.build(cartView, addressView)
+        orderService.save(_) >> {
+            throw new DataIntegrityViolationException("OrderNumber must be unique.")
+        }
+        application.place("cardItd", "addressId", "creditCardId")
+
+        then: "should throw DataIntegrityViolationException"
+        thrown(BuildOrderException)
+    }
 
 }

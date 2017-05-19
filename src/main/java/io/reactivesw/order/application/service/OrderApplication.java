@@ -16,6 +16,7 @@ import io.reactivesw.order.infrastructure.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +87,8 @@ public class OrderApplication {
 
   /**
    * Build an order with cart and address.
+   * Generate an unique orderNumber and set into order object, if orderNumber is not unique,
+   * retry maxTries (default is 5) times.
    *
    * @param cartId String
    * @param addressId String
@@ -93,20 +96,36 @@ public class OrderApplication {
    */
   private Order buildOrder(String cartId, String addressId) {
     LOG.debug("Enter. cartId: {}, addressId: {}.", cartId, addressId);
+    CartView cart = null;
+    AddressView address = null;
     try {
-      CartView cart = restClient.getCart(cartId);
-      AddressView address = restClient.getAddress(addressId);
-      Order order = OrderMapper.build(cart, address);
-      order.setOrderNumber(orderService.generateOrderNumber());
-      orderService.calculateCartPrice(order);
-      order.setOrderStatus(OrderStatus.Created);
-
-      // create the order.
-      return orderService.save(order);
+      cart = restClient.getCart(cartId);
+      address = restClient.getAddress(addressId);
     } catch (CheckoutCartException | GetAddressException ex) {
       LOG.debug("Build order failed. cartId: {}, addressId: {}.", cartId, addressId);
       throw new BuildOrderException("Build order failed.");
     }
-  }
+    int count = 0;
+    int maxTries = 5;
+    while (true) {
+      try {
+        Order order = OrderMapper.build(cart, address);
+        order.setOrderNumber(orderService.generateOrderNumber());
+        orderService.calculateCartPrice(order);
+        order.setOrderStatus(OrderStatus.Created);
 
+        //Create the order.
+        return orderService.save(order);
+      } catch (DataIntegrityViolationException ex) {
+        LOG.debug("Generated orderNumber is a not unique. Retry.");
+        count += 1;
+        if (count >= maxTries) {
+          LOG.debug("OrderNumber must be unique, fail after retrying maxTries times.");
+          throw new BuildOrderException("Build order failed.");
+        }
+      }
+    }
+  }
 }
+
+

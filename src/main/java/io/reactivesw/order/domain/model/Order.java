@@ -120,6 +120,6 @@ public class Order {
   /**
    * Order number is used to identify order for customer.
    */
-  @Column
-  private String orderNumber;
+  @Column(unique = true)
+  private Long orderNumber;
 }

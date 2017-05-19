@@ -135,4 +135,13 @@ class OrderServiceTest extends Specification {
         then:
         noExceptionThrown()
     }
+
+    def "Test6.3: generate orderNumber, generated orderNumber shoule be positive"() {
+        when: "generate order number"
+        def orderNumber = orderService.generateOrderNumber()
+
+        then: "orderNumber should be positive and less than Long.MAX_VALUE >>31"
+        orderNumber >= 0
+        orderNumber <= Math.abs(Long.MAX_VALUE >> 31)
+    }
 }
